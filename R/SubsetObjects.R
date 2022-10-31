@@ -1,0 +1,114 @@
+#' Subsets objects by orthologues found in the global list and gives Human gene names for Mouse objects
+#' @author Mariano Ruz Jurado
+#' @param SeuratObjectList.mice list with mouse objects to subset by found orthologues
+#' @param OrthologueList previous mad elist with 1 to 1 ortholgue assignment
+#' @param SeuratObjectList.human list with human seurat objects to subset by orthologues
+#' @return list containing sublists with subsetted objects
+#' @export
+SubsetObjects <- function(OrthologueList,SeuratObjectList.mice,SeuratObjectList.human){
+  #for loop containing sub setting mice by all found orthologues and converting mice names in human orthologues
+  SeuratObject.mouse.combined.orthologs.list <- list()
+  human.converted <- list()
+
+  for (i in 1:length(SeuratObjectList.mice)) {
+
+    mouseGenes<-rownames(SeuratObjectList.mice[[i]]@assays$RNA)
+    mouseGenes.overlap <- character()
+    human.names <- character()
+    for (j in 1:length(mouseGenes)) {
+      mGene <- mouseGenes[j]
+      #check if the feature name is in the global ortholog list made of the human/mice gtf and uppercase matching
+      if (mGene %in% OrthologueList$MouseGene == TRUE){
+        mouseGenes.overlap[j] <- mGene
+      }
+    }
+
+    #Feature names with human ortholog
+    mouseGenes.overlap <- mouseGenes.overlap[complete.cases(mouseGenes.overlap)]
+    SeuratObject.mouse.combined.orthologs.list[[i]]<-subset(SeuratObjectList.mice[[i]]
+                                                            , features = mouseGenes.overlap)
+
+    orthologlist.overlap <- rownames(SeuratObject.mouse.combined.orthologs.list[[i]])
+    #get a list with converted mice to human gene names
+    # , now that there are only mice features which have human ortholog
+    for (k in 1:length(orthologlist.overlap)) {
+      mGene <- orthologlist.overlap[k]
+      human.names[k] <- OrthologueList[OrthologueList$MouseGene == mGene,]$HGNC.symbol
+    }
+
+    #insert the converted human.names into a list
+    human.converted[[i]] <- human.names
+    #get stats for sample
+    stats.converting.mouse <- data.frame(rownames.length.object.before=length(mouseGenes)
+                                   ,rownames.length.of.object.subsetted=length(orthologlist.overlap)
+                                   ,rownames.length.object.converted=length(human.converted[[i]])
+                                   ,row.names = levels(SeuratObjectList.mice[[i]]$orig.ident))
+    # #write out
+    # write.xlsx(stats.converting,file = paste0(outputFolder,"/Orthologuestats/"
+    #                                           ,levels(SeuratObjectList.mice[[i]]$orig.ident)
+    #                                           ,"conversion.xlsx"), col.names = T,row.names = T)
+  }
+
+  #for loop containing subsetting human by all found orthologues
+  SeuratObject.human.combined.orthologs.list <- list()
+  for (i in 1:length(SeuratObjectList.human)) {
+
+    humanGenes<-rownames(SeuratObjectList.human[[i]]@assays$RNA)
+    humanGenes.overlap <- character()
+    humanGenes.no.ortholog <- character()
+    for (j in 1:length(humanGenes)) {
+      hGene <- humanGenes[j]
+      #check if the feature name is in the global ortholog list made of the human/mice gtf and uppercase matching
+      if (hGene %in% OrthologueList$HGNC.symbol == TRUE){
+        humanGenes.overlap[j] <- hGene
+      }
+    }
+
+    #Feature names with human ortholog
+    humanGenes.overlap <- humanGenes.overlap[complete.cases(humanGenes.overlap)]
+    #Feature names without human ortholog
+    humanGenes.no.ortholog <- humanGenes.no.ortholog[complete.cases(humanGenes.no.ortholog)]
+    SeuratObject.human.combined.orthologs.list[[i]]<-subset(SeuratObjectList.human[[i]]
+                                                            , features = humanGenes.overlap)
+    #get stats for sample
+    stats.converting.human <- data.frame(rownames.length.object.before=length(humanGenes)
+                                   ,rownames.length.of.object.subsetted=length(humanGenes.overlap)
+                                   ,row.names = levels(SeuratObjectList.human[[i]]$orig.ident))
+    # #write out
+    # write.xlsx(stats.converting,file = paste0(outputFolder,"/Orthologuestats/"
+    #                                           ,levels(SeuratObjectList.human[[i]]$orig.ident)
+    #                                           ,"conversion.xlsx"), col.names = T,row.names = T)
+
+  }
+  Resultlist <- list() # build a list with names
+  Resultlist[["SeuratObject.mouse.combined.orthologs.list"]] <- SeuratObject.mouse.combined.orthologs.list
+  Resultlist[["SeuratObject.human.combined.orthologs.list"]] <- SeuratObject.human.combined.orthologs.list
+  Resultlist[["human.converted.mice.names"]] <- human.converted
+  return(Resultlist)
+}
+
+#' Renaming of Mice Objects with the found human names from SubsetObjects
+#' @author Mariano Ruz Jurado
+#' @param ObjList List with Seurat object to subset with orthologues names
+#' @param newnames List with vector with new names generated by SubsetObjects function
+#' @return Seurat object containing subsetted object with human orthologue names
+#' @export
+RenameGenesSeurat <- function(ObjList, newnames) { # Replace gene names in different slots of a Seurat object. Run this before integration. Run this before integration. It only changes obj@assays$RNA@counts, @data and @scale.data.
+  SeuratObject.mouse.combined.orthologs.humanized.list <- list() #build return list
+  for (i in 1:length(ObjList)) {
+    obj <- ObjList[[i]]
+    convert.names <- newnames[[i]]
+    # print("Run this before integration. It only changes obj@assays$RNA@counts, @data and @scale.data.")
+    RNA <- obj@assays$RNA
+
+    if (nrow(RNA) == length(convert.names)) {
+      if (length(RNA@counts)) RNA@counts@Dimnames[[1]]            <- convert.names
+      if (length(RNA@data)) RNA@data@Dimnames[[1]]                <- convert.names
+      # if (length(RNA@scale.data)) RNA@scale.data@Dimnames[[1]]    <- newnames
+    } else {"Unequal gene sets: nrow(RNA) != nrow(convert.names)"}
+    obj@assays$RNA <- RNA
+    SeuratObject.mouse.combined.orthologs.humanized.list[[i]] <- obj
+  }
+  return(SeuratObject.mouse.combined.orthologs.humanized.list)
+}
+
