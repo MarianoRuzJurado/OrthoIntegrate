@@ -13,14 +13,14 @@
 Importer <- function(pathway,id, TenX=TRUE, performNormalisation=TRUE, performScaling = FALSE,performVariableGeneDetection=TRUE, FilterCells=TRUE, FilterByAbsoluteValues=FALSE,...) {
 
   if (TenX) {
-    Matrix <- Read10X(pathway)
+    Matrix <- Seurat::Read10X(pathway)
   }  else{
     Matrix <- read.table(pathway,header = TRUE,sep = ",", dec = ".", row.names = 1)
   }
   #catch optional parameters
   optionalParameters <- list(...)
 
-  seuratObject =CreateSeuratObject(counts = Matrix, project = id, min.cells = 5)
+  seuratObject =Seurat::CreateSeuratObject(counts = Matrix, project = id, min.cells = 5)
   seuratObject$sample <- id
   tmp<-unlist(strsplit(id,split = "-"))
   seuratObject$condition <- paste0(tmp[1:length(tmp)-1],collapse = "-")
@@ -41,8 +41,8 @@ Importer <- function(pathway,id, TenX=TRUE, performNormalisation=TRUE, performSc
   p1<-VlnPlot(object = seuratObject, features = c("nFeature_RNA"), ncol = 1, pt.size = 0) + theme(legend.position = "None", axis.title.x = element_blank(), axis.text.x = element_blank())
   p2<-VlnPlot(object = seuratObject, features = c("nCount_RNA"), ncol = 1, pt.size = 0) + theme(legend.position = "None", axis.title.x = element_blank(), axis.text.x = element_blank())
   p3<-VlnPlot(object = seuratObject, features = c("percent.mito"), ncol = 1, pt.size = 0) + theme(legend.position = "None", axis.title.x = element_blank(), axis.text.x = element_blank())
-  gg_preFiltering <- ggarrange(p1,p2,p3, nrow = 1)
-  gg_preFiltering <- annotate_figure(gg_preFiltering, top = text_grob(id,face="bold",color = "darkred",size=18,hjust = 0.2))
+  gg_preFiltering <-  ggpubr::ggarrange(p1,p2,p3, nrow = 1)
+  gg_preFiltering <- ggpubr::annotate_figure(gg_preFiltering, top = text_grob(id,face="bold",color = "darkred",size=18,hjust = 0.2))
   ggsave(filename = paste0(pathway,"QC_preFiltered.svg"),device = "svg", width = 10,height = 10)
 
   if (FilterCells==TRUE) {
@@ -83,13 +83,13 @@ Importer <- function(pathway,id, TenX=TRUE, performNormalisation=TRUE, performSc
 
   }
   if (performNormalisation==TRUE) {
-    seuratObject<-NormalizeData(object = seuratObject,verbose = FALSE)
+    seuratObject<-Seurat::NormalizeData(object = seuratObject,verbose = FALSE)
   }
   if(performVariableGeneDetection==TRUE){
-    seuratObject<-FindVariableFeatures(object = seuratObject, selection.method = "vst", nfeatures = 2000, verbose = FALSE)
+    seuratObject<-Seurat::FindVariableFeatures(object = seuratObject, selection.method = "vst", nfeatures = 2000, verbose = FALSE)
   }
   if (performScaling==TRUE) {
-    seuratObject<-ScaleData(object = seuratObject)
+    seuratObject<-Seurat::ScaleData(object = seuratObject)
   }
   message("Imported ", length(seuratObject@meta.data$orig.ident), " cells from ", pathway, "with ID ", id, "\n")
 

@@ -4,10 +4,10 @@
 #' @return List with converted Names based on ensembl database entries
 #' @export
 returnOrthologueslist <- function(GeneNames){
-  human = useEnsembl("genes", host = "https://dec2021.archive.ensembl.org", dataset = "hsapiens_gene_ensembl")
-  mouse = useEnsembl("genes", host = "https://dec2021.archive.ensembl.org", dataset = "mmusculus_gene_ensembl")
+  human = biomaRt::useEnsembl("genes", host = "https://dec2021.archive.ensembl.org", dataset = "hsapiens_gene_ensembl")
+  mouse = biomaRt:useEnsembl("genes", host = "https://dec2021.archive.ensembl.org", dataset = "mmusculus_gene_ensembl")
   #change attributes including gene_type, we need to know which homolog orthologues are real coding genes!!!
-  genesV2 = getLDS(attributes = c("hgnc_symbol","description"), filters = c("hgnc_symbol"), values = GeneNames , mart = human, attributesL = c("mgi_symbol", "description"), martL = mouse, uniqueRows=T)
+  genesV2 = biomaRt:getLDS(attributes = c("hgnc_symbol","description"), filters = c("hgnc_symbol"), values = GeneNames , mart = human, attributesL = c("mgi_symbol", "description"), martL = mouse, uniqueRows=T)
   return(genesV2)
 }
 
@@ -93,7 +93,7 @@ BuildOrthologues <- function(GTF.human, GTF.mice){
           mGene.low <- tolower(mGene) # lowercase HGNC symbol for lower Levenshtein distances
           replacement <- replacement[replacement != ''] # delete empty character strings in vector, there is one feature
           replacement <- replacement[order(replacement)] # sort alphabetically
-          Levensthein.DF <- levenshteinDist(mGene.low, replacement) # calculate Levenshtein distance for every hit
+          Levensthein.DF <- RecordLinkage::levenshteinDist(mGene.low, replacement) # calculate Levenshtein distance for every hit
           Levensthein.DF <- sort(Levensthein.DF) # sort values increasing
           # , so in while loop there will be picked the right one
           low.score.hit <- which.min(Levensthein.DF) # take the lowest score by
@@ -150,8 +150,8 @@ protein.matching <- function(mGene,replacement,OrthologueList_allHuman){
 
 
 
-  outh <- queryMany(mGene, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="human")
-  outm <- try(queryMany(replacement, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="mouse"),silent = T) # use try for some genes it gives errors
+  outh <- mygene::queryMany(mGene, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="human")
+  outm <- try(mygene::queryMany(replacement, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="mouse"),silent = T) # use try for some genes it gives errors
 
   if (!("try-error" %in% class(outm))) {
 
@@ -186,21 +186,21 @@ protein.matching <- function(mGene,replacement,OrthologueList_allHuman){
 
     #get sequences based on uniprot IDs
     #human
-    sequences.h <- suppressWarnings(GetSequences(unlist(outh$uniprot.Swiss.Prot), directorypath = NULL))
+    sequences.h <- suppressWarnings(UniprotR::GetSequences(unlist(outh$uniprot.Swiss.Prot), directorypath = NULL))
     human.sequences <- sequences.h$Sequence
     if (plyr::empty(sequences.h)) {
-      sequences.h <- suppressWarnings(GetSequences(unlist(outh$uniprot.TrEMBL), directorypath = NULL))
+      sequences.h <- suppressWarnings(UniprotR::GetSequences(unlist(outh$uniprot.TrEMBL), directorypath = NULL))
       human.sequences <- sequences.h$Sequence
     }
     #mice
-    sequences.m <- suppressWarnings(GetSequences(unlist(uniprot.mice), directorypath = NULL))
+    sequences.m <- suppressWarnings(UniprotR::GetSequences(unlist(uniprot.mice), directorypath = NULL))
     mice.sequences <- sequences.m$Sequence
 
     #pairwise alignment for checking sequence similarity, returning a score which is then used for determining best orthologue
     if (!is.null(human.sequences) && !is.null(mice.sequences)) {
       local.Align.list <- list()
       for (k in 1:length(mice.sequences)) {
-        localAlign <- pairwiseAlignment(human.sequences,mice.sequences[k], substitutionMatrix="BLOSUM50" , gapOpening = 0, gapExtension = 8)
+        localAlign <- Biostrings::pairwiseAlignment(human.sequences,mice.sequences[k], substitutionMatrix="BLOSUM50" , gapOpening = 0, gapExtension = 8)
         local.Align.list[[k]] <- localAlign@score
       }
       names(local.Align.list) <- replacement #set replacement names
@@ -236,17 +236,17 @@ protein.matching <- function(mGene,replacement,OrthologueList_allHuman){
 nucleotide.matching <- function(mGene,replacement,OrthologueList_allHuman){
 
 
-  out <- queryMany(mGene, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="human")
-  outm <- try(queryMany(replacement, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="mouse"),silent = T) # use try for some genes it gives errors
+  out <- mygene::queryMany(mGene, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="human")
+  outm <- try(mygene::queryMany(replacement, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="mouse"),silent = T) # use try for some genes it gives errors
 
   if (!("try-error" %in% class(outm))) {
     #human
-    linked_seq_ids <- entrez_link(dbfrom = "gene", id=out$entrezgene, db="nuccore")
+    linked_seq_ids <- rentrez::entrez_link(dbfrom = "gene", id=out$entrezgene, db="nuccore")
     linked_transcripts <- linked_seq_ids$links$gene_nuccore_refseqrna
     head(linked_transcripts)
     if (!is.null(linked_transcripts)) { #check if it hits a sequence human
 
-      all_recs <- entrez_fetch(db="nuccore", id=linked_transcripts, rettype = "fasta")
+      all_recs <- rentrez::entrez_fetch(db="nuccore", id=linked_transcripts, rettype = "fasta")
       sequences <- unlist(strsplit(all_recs, split=">"))
       sequences.orth <- sequences[grep("NM",sequences)] # NM is for non predicted mRNAs
       if (identical(sequences.orth, character(0)) == T) {
@@ -264,7 +264,7 @@ nucleotide.matching <- function(mGene,replacement,OrthologueList_allHuman){
 
     #mouse
     if (!is.null(outm$entrezgene)) {
-      linked_seq_ids <- entrez_link(dbfrom = "gene", id=outm$entrezgene, db="nuccore")
+      linked_seq_ids <- rentrez::entrez_link(dbfrom = "gene", id=outm$entrezgene, db="nuccore")
       linked_transcripts.m <- linked_seq_ids$links$gene_nuccore_refseqrna
       head(linked_transcripts.m)
     } else {
@@ -272,7 +272,7 @@ nucleotide.matching <- function(mGene,replacement,OrthologueList_allHuman){
     }
     if (!is.null(linked_transcripts.m)) { #check if it hits a sequence mice
 
-      all_recs <- entrez_fetch(db="nuccore", id=linked_transcripts.m, rettype = "fasta")
+      all_recs <- rentrez::entrez_fetch(db="nuccore", id=linked_transcripts.m, rettype = "fasta")
       sequences <- unlist(strsplit(all_recs, split=">"))
       sequences.orth <- sequences[grep("NM",sequences)] # NM is for non predicted mRNAs
       if (identical(sequences.orth, character(0)) == T) {
@@ -296,16 +296,16 @@ nucleotide.matching <- function(mGene,replacement,OrthologueList_allHuman){
     if (!is.null(linked_transcripts.m)) { # no transcript sequences, no alignment
       #alignment
       local.Align.list <- list()
-      mat <- nucleotideSubstitutionMatrix(match = 1, mismatch = 0, baseOnly = FALSE, type = "DNA")
+      mat <- Biostrings::nucleotideSubstitutionMatrix(match = 1, mismatch = 0, baseOnly = FALSE, type = "DNA")
       for (k in 1:length(orthologues.sequences)) {
-        localAlign <- pairwiseAlignment(
+        localAlign <- Biostrings::pairwiseAlignment(
           AAString(Non.variant.h),
           AAString(orthologues.sequences[[k]]),
           type="local",
           substitutionMatrix=mat , gapOpening = 5, gapExtension = 2)
         local.Align.list[[k]] <- localAlign@score
         #get gene name from string, stands between "()"
-        names(local.Align.list)[k] <- str_match(names(orthologues.sequences)[k],"[(](.*?)[)]")[,2]
+        names(local.Align.list)[k] <- stringr::str_match(names(orthologues.sequences)[k],"[(](.*?)[)]")[,2]
       }
       local.Align.list <- local.Align.list[order(-unlist(local.Align.list))] #order by score
       replacement.hit <- names(local.Align.list[1]) # first entry now has the highest score
