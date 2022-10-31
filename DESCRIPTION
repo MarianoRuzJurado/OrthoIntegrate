@@ -2,7 +2,7 @@ Package: OrthoIntegrate
 Title: Functions for Accurately Integrate scRNA-Seq Experiment Objects across Species
 Version: 0.0.0.9000
 Authors@R: 
-    person("Mariano", "Ruz Jurado", , "ruzjurado@med.uni-frankfurt.de", role = c("aut", "cre")
+    person("Mariano", "Ruz Jurado", , "ruzjurado@med.uni-frankfurt.de", role = c("aut", "cre"))
 Description: Contains functions which creates a Global Orthologue List between Human and Mouse Nomenclature by using 'Ensembl', 'Uniprot' and 'NCBI' database.
     It also contains functions for subsetting scRNA-Seq 'Seurat' Objects by the Orthologue List and integrate them into one Object using 'Seurat'. You provide 
     your PATH to 'CellRanger' or 'STARsolo' count matrix as vectors and continue using the functions of 'OrthoIntegrate' in an easy to understand flow.
