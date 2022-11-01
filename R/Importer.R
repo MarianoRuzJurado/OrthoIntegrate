@@ -34,7 +34,7 @@ Importer <- function(pathway,id, TenX=TRUE, performNormalisation=TRUE, performSc
 
   }
 
-  percent.mito <- Matrix::colSums(x = Seurat::GetAssayData(object = seuratObject, slot = 'counts')[mito.features, ]) / Matrix::colSums(x = GetAssayData(object = seuratObject, slot = 'counts'))
+  percent.mito <- Matrix::colSums(x = Seurat::GetAssayData(object = seuratObject, slot = 'counts')[mito.features, ]) / Matrix::colSums(x = Seurat::GetAssayData(object = seuratObject, slot = 'counts'))
   seuratObject$percent.mito <- percent.mito
 
   #write QC to file
