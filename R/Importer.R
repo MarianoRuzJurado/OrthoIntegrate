@@ -43,7 +43,7 @@ Importer <- function(pathway,id, TenX=TRUE, performNormalisation=TRUE, performSc
   p3<-Seurat::VlnPlot(object = seuratObject, features = c("percent.mito"), ncol = 1, pt.size = 0) + ggplot2::theme(legend.position = "None", axis.title.x = ggplot2::element_blank(), axis.text.x = ggplot2::element_blank())
   gg_preFiltering <-  ggpubr::ggarrange(p1,p2,p3, nrow = 1)
   gg_preFiltering <- ggpubr::annotate_figure(gg_preFiltering, top = ggpubr::text_grob(id,face="bold",color = "darkred",size=18,hjust = 0.2))
-  ggsave(filename = paste0(pathway,"QC_preFiltered.svg"),device = "svg", width = 10,height = 10)
+  ggplot2::ggsave(filename = paste0(pathway,"QC_preFiltered.svg"),device = "svg", width = 10,height = 10)
 
   if (FilterCells==TRUE) {
     message("start Filtering")
