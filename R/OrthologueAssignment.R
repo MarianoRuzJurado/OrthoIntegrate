@@ -146,81 +146,94 @@ BuildOrthologues <- function(GTF.human, GTF.mice){
 #' @param replacement  vector containing possible orthologues found by biomaRt
 #' @param OrthologueList_allHuman  global orthologuelist which contains all Human genes and is filled with mouse orthologues
 #' @export
-protein.matching <- function(mGene,replacement,OrthologueList_allHuman){
-
-
-
-  outh <- mygene::queryMany(mGene, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="human")
-  outm <- try(mygene::queryMany(replacement, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="mouse"),silent = T) # use try for some genes it gives errors
-
+function (mGene, replacement, OrthologueList_allHuman)
+{
+  outh <- mygene::queryMany(mGene, scopes = "symbol", fields = c("entrezgene",
+                                                                 "uniprot"), species = "human")
+  outm <- try(mygene::queryMany(replacement, scopes = "symbol",
+                                fields = c("entrezgene", "uniprot"), species = "mouse"),
+              silent = T)
   if (!("try-error" %in% class(outm))) {
-
-    #set a TrEMBL prot number or swiss prot number if TREMBL not available
     uniprot.mice <- list()
     for (i in 1:nrow(outm)) {
-      if (!is.null(outm[i,]$uniprot.TrEMBL)) { # check if column is avalaible for TREMBL id if not set NA
-        uniprot.mice[i] <- outm[i,]$uniprot.TrEMBL
-      } else
-      {
+      if (!is.null(unlist(outm[i, ]$uniprot.TrEMBL))) {
+        uniprot.mice[i] <- outm[i, ]$uniprot.TrEMBL
+      }
+      else {
         uniprot.mice[i] <- NA
       }
-      if (is.na(uniprot.mice[i]) && !is.null(outm[i,]$uniprot.Swiss.Prot)) { # check if swiss prot number available
-        uniprot.mice[i] <- outm[i,]$uniprot.Swiss.Prot
+      if (is.na(uniprot.mice[i]) && !is.null(unlist(outm[i, ]$uniprot.Swiss.Prot))) {
+        uniprot.mice[i] <- outm[i, ]$uniprot.Swiss.Prot
       }
     }
-
-    #set not found entries with NA
     for (i in 1:length(uniprot.mice)) {
       if (!is.null(uniprot.mice[[i]][1]) && !is.na(uniprot.mice[[i]][1])) {
         uniprot.mice[[i]] <- uniprot.mice[[i]][1]
-      } else{
-        uniprot.mice[[i]] <- NA # set NA to not found in database
-        replacement[i] <- NA # set NA to these Gene Symbols as well
-
+      }
+      else {
+        uniprot.mice[[i]] <- NA
+        replacement[i] <- NA
       }
     }
-
-    #delete NAs
     replacement <- replacement[!is.na(replacement)]
     uniprot.mice <- uniprot.mice[!is.na(uniprot.mice)]
 
-    #get sequences based on uniprot IDs
-    #human
-    sequences.h <- suppressWarnings(UniprotR::GetSequences(unlist(outh$uniprot.Swiss.Prot), directorypath = NULL))
-    human.sequences <- sequences.h$Sequence
-    if (plyr::empty(sequences.h)) {
-      sequences.h <- suppressWarnings(UniprotR::GetSequences(unlist(outh$uniprot.TrEMBL), directorypath = NULL))
-      human.sequences <- sequences.h$Sequence
+    uniprot.human <- list()
+    for (i in 1:nrow(outh)) {
+      if (!is.null(unlist(outh[i, ]$uniprot.TrEMBL))) {
+        uniprot.human[i] <- outh[i, ]$uniprot.TrEMBL
+      }
+      else {
+        uniprot.human[i] <- NA
+      }
+      if (is.na(uniprot.human[i]) && !is.null(unlist(outh[i, ]$uniprot.Swiss.Prot))) {
+        uniprot.human[i] <- outh[i, ]$uniprot.Swiss.Prot
+      }
     }
-    #mice
-    sequences.m <- suppressWarnings(UniprotR::GetSequences(unlist(uniprot.mice), directorypath = NULL))
-    mice.sequences <- sequences.m$Sequence
+    for (i in 1:length(uniprot.human)) {
+      if (!is.null(uniprot.human[[i]][1]) && !is.na(uniprot.human[[i]][1])) {
+        uniprot.human[[i]] <- uniprot.human[[i]][1]
+      }
+      else {
+        uniprot.human[[i]] <- NA
+      }
+    }
+    uniprot.human <- uniprot.human[!is.na(uniprot.human)]
 
-    #pairwise alignment for checking sequence similarity, returning a score which is then used for determining best orthologue
+    sequences.h <- suppressWarnings(UniprotR::GetSequences(unlist(uniprot.human),
+                                                           directorypath = NULL))
+    human.sequences <- sequences.h$Sequence
+
+    sequences.m <- suppressWarnings(UniprotR::GetSequences(unlist(uniprot.mice),
+                                                           directorypath = NULL))
+    mice.sequences <- sequences.m$Sequence
     if (!is.null(human.sequences) && !is.null(mice.sequences)) {
       local.Align.list <- list()
       for (k in 1:length(mice.sequences)) {
-        localAlign <- Biostrings::pairwiseAlignment(human.sequences,mice.sequences[k], substitutionMatrix="BLOSUM50" , gapOpening = 0, gapExtension = 8)
+        localAlign <- Biostrings::pairwiseAlignment(human.sequences,
+                                                    mice.sequences[k], substitutionMatrix = "BLOSUM50",
+                                                    gapOpening = 0, gapExtension = 8)
         local.Align.list[[k]] <- localAlign@score
       }
-      names(local.Align.list) <- replacement #set replacement names
-      local.Align.list <- local.Align.list[order(-unlist(local.Align.list))] #order by score
-      replacement.hit <- names(local.Align.list[1]) # first entry now has the highest score
-      j<-1 # set counter for while
-      while (replacement.hit %in% OrthologueList_allHuman$MouseGene && !is.na(replacement.hit)) { # check if already in DF, if yes then take second hit
-        replacement.hit <- names(local.Align.list[j+1])
-        j<-j+1
+      names(local.Align.list) <- replacement
+      local.Align.list <- local.Align.list[order(-unlist(local.Align.list))]
+      replacement.hit <- names(local.Align.list[1])
+      j <- 1
+      while (replacement.hit %in% OrthologueList_allHuman$MouseGene &&
+             !is.na(replacement.hit)) {
+        replacement.hit <- names(local.Align.list[j +
+                                                    1])
+        j <- j + 1
       }
-      OrthologueList_allHuman[OrthologueList_allHuman$HGNC.symbol==mGene,]$MouseGene=replacement.hit # set orthologue
-
+      OrthologueList_allHuman[OrthologueList_allHuman$HGNC.symbol ==
+                                mGene, ]$MouseGene = replacement.hit
     }
   }
-  else
-    {
+  else {
     human.sequences <- NA
     mice.sequences <- NA
-    }
-  return(list(OrthologueList_allHuman,human.sequences,mice.sequences))
+  }
+  return(list(OrthologueList_allHuman, human.sequences, mice.sequences))
 }
 
 
