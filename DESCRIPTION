@@ -23,7 +23,8 @@ Imports:
         RecordLinkage (>= 0.4-12.3),
         Biostrings (>= 2.64.1),
         rentrez (>= 1.2.3),
-        stringr (>= 1.4.1)
+        stringr (>= 1.4.1),
+        svglite (>= 2.1.0)
 Suggests: 
     knitr,
     rmarkdown
