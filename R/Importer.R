@@ -13,6 +13,8 @@
 Importer <- function(pathways,ids, TenX=TRUE, performNormalisation=TRUE, performScaling = FALSE,performVariableGeneDetection=TRUE, FilterCells=TRUE, FilterByAbsoluteValues=FALSE,...) {
 
   SeuratObjectList <- list() # list to return
+  SeuratObjectList[["SeuratObjects"]] <- list()
+  SeuratObjectList[["Plots"]] <- list()
   for (i in length(pathways)) {
 
     pathway <- pathways[i]
@@ -98,8 +100,9 @@ Importer <- function(pathways,ids, TenX=TRUE, performNormalisation=TRUE, perform
       seuratObject<-Seurat::ScaleData(object = seuratObject)
     }
     message("Imported ", length(seuratObject@meta.data$orig.ident), " cells from ", pathway, "with ID ", id, "\n")
-    SeuratObjectList[[i]][["SeuratObjects"]] <- seuratObject
-    SeuratObjectList[[i]][["plot"]] <- gg_preFiltering
+
+    SeuratObjectList[["SeuratObject"]][[i]] <- seuratObject
+    SeuratObjectList[["plot"]][[i]] <- gg_preFiltering
   }
   return(SeuratObjectList)
 }
