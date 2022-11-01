@@ -5,9 +5,9 @@
 #' @export
 returnOrthologueslist <- function(GeneNames){
   human = biomaRt::useEnsembl("genes", host = "https://dec2021.archive.ensembl.org", dataset = "hsapiens_gene_ensembl")
-  mouse = biomaRt:useEnsembl("genes", host = "https://dec2021.archive.ensembl.org", dataset = "mmusculus_gene_ensembl")
+  mouse = biomaRt::useEnsembl("genes", host = "https://dec2021.archive.ensembl.org", dataset = "mmusculus_gene_ensembl")
   #change attributes including gene_type, we need to know which homolog orthologues are real coding genes!!!
-  genesV2 = biomaRt:getLDS(attributes = c("hgnc_symbol","description"), filters = c("hgnc_symbol"), values = GeneNames , mart = human, attributesL = c("mgi_symbol", "description"), martL = mouse, uniqueRows=T)
+  genesV2 = biomaRt::getLDS(attributes = c("hgnc_symbol","description"), filters = c("hgnc_symbol"), values = GeneNames , mart = human, attributesL = c("mgi_symbol", "description"), martL = mouse, uniqueRows=T)
   return(genesV2)
 }
 
