@@ -15,7 +15,7 @@ Importer <- function(pathways,ids, TenX=TRUE, performNormalisation=TRUE, perform
   SeuratObjectList <- list() # list to return
   SeuratObjectList[["SeuratObjects"]] <- list()
   SeuratObjectList[["Plots"]] <- list()
-  for (i in length(pathways)) {
+  for (i in 1:length(pathways)) {
 
     pathway <- pathways[i]
     id <- ids[i]
@@ -101,8 +101,8 @@ Importer <- function(pathways,ids, TenX=TRUE, performNormalisation=TRUE, perform
     }
     message("Imported ", length(seuratObject@meta.data$orig.ident), " cells from ", pathway, "with ID ", id, "\n")
 
-    SeuratObjectList[["SeuratObject"]][[i]] <- seuratObject
-    SeuratObjectList[["plot"]][[i]] <- gg_preFiltering
+    SeuratObjectList[["SeuratObjects"]][[i]] <- seuratObject
+    SeuratObjectList[["Plots"]][[i]] <- gg_preFiltering
   }
   return(SeuratObjectList)
 }
