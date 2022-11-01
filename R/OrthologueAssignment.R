@@ -312,8 +312,8 @@ nucleotide.matching <- function(mGene,replacement,OrthologueList_allHuman){
       mat <- Biostrings::nucleotideSubstitutionMatrix(match = 1, mismatch = 0, baseOnly = FALSE, type = "DNA")
       for (k in 1:length(orthologues.sequences)) {
         localAlign <- Biostrings::pairwiseAlignment(
-          AAString(Non.variant.h),
-          AAString(orthologues.sequences[[k]]),
+          Biostrings::AAString(Non.variant.h),
+          Biostrings::AAString(orthologues.sequences[[k]]),
           type="local",
           substitutionMatrix=mat , gapOpening = 5, gapExtension = 2)
         local.Align.list[[k]] <- localAlign@score
