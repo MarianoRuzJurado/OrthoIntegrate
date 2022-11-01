@@ -99,10 +99,10 @@ Importer <- function(pathways,ids, TenX=TRUE, performNormalisation=TRUE, perform
     if (performScaling==TRUE) {
       seuratObject<-Seurat::ScaleData(object = seuratObject)
     }
-    message("Imported ", length(seuratObject@meta.data$orig.ident), " cells from ", pathway, "with ID ", id, "\n")
+    message("Imported ", length(seuratObject@meta.data$orig.ident), " cells from ", pathway, " with ID ", id, "\n")
 
-    SeuratObjectList[["SeuratObjects"]][[i]] <- seuratObject
-    SeuratObjectList[["Plots"]][[i]] <- gg_preFiltering
+    SeuratObjectList[["SeuratObjects"]][[id]] <- seuratObject
+    SeuratObjectList[["Plots"]][[id]] <- gg_preFiltering
   }
   return(SeuratObjectList)
 }
