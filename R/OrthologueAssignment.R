@@ -146,7 +146,7 @@ BuildOrthologues <- function(GTF.human, GTF.mice){
 #' @param replacement  vector containing possible orthologues found by biomaRt
 #' @param OrthologueList_allHuman  global orthologuelist which contains all Human genes and is filled with mouse orthologues
 #' @export
-function (mGene, replacement, OrthologueList_allHuman)
+protein.matching <- function (mGene, replacement, OrthologueList_allHuman)
 {
   outh <- mygene::queryMany(mGene, scopes = "symbol", fields = c("entrezgene",
                                                                  "uniprot"), species = "human")
