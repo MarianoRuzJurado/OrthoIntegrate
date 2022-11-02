@@ -147,11 +147,8 @@ BuildOrthologues <- function(GTF.human, GTF.mice){
 #' @export
 protein.matching <- function (mGene, replacement, OrthologueList_allHuman)
 {
-  outh <- mygene::queryMany(mGene, scopes = "symbol", fields = c("entrezgene",
-                                                                 "uniprot"), species = "human")
-  outm <- try(mygene::queryMany(replacement, scopes = "symbol",
-                                fields = c("entrezgene", "uniprot"), species = "mouse"),
-              silent = T)
+  outh <- mygene::queryMany(mGene, scopes = "symbol", fields = c("entrezgene","uniprot"), species = "human")
+  outm <- try(mygene::queryMany(replacement, scopes = "symbol",fields = c("entrezgene", "uniprot"), species = "mouse"),silent = T) #some mouse genes cant be handled by mygene
   if (!("try-error" %in% class(outm))) {
     uniprot.mice <- list()
     for (i in 1:nrow(outm)) {
@@ -199,12 +196,10 @@ protein.matching <- function (mGene, replacement, OrthologueList_allHuman)
     }
     uniprot.human <- uniprot.human[!is.na(uniprot.human)]
 
-    sequences.h <- suppressWarnings(UniprotR::GetSequences(unlist(uniprot.human),
-                                                           directorypath = NULL))
+    sequences.h <- suppressWarnings(UniprotR::GetSequences(unlist(uniprot.human),directorypath = NULL)) # suppress the UniprotR warnings if not found Sequence
     human.sequences <- sequences.h$Sequence
 
-    sequences.m <- suppressWarnings(UniprotR::GetSequences(unlist(uniprot.mice),
-                                                           directorypath = NULL))
+    sequences.m <- suppressWarnings(UniprotR::GetSequences(unlist(uniprot.mice),directorypath = NULL)) # suppress the UniprotR warnings if not found Sequence
     mice.sequences <- sequences.m$Sequence
     if (!is.null(human.sequences) && !is.null(mice.sequences)) {
       local.Align.list <- list()
@@ -218,14 +213,11 @@ protein.matching <- function (mGene, replacement, OrthologueList_allHuman)
       local.Align.list <- local.Align.list[order(-unlist(local.Align.list))]
       replacement.hit <- names(local.Align.list[1])
       j <- 1
-      while (replacement.hit %in% OrthologueList_allHuman$MouseGene &&
-             !is.na(replacement.hit)) {
-        replacement.hit <- names(local.Align.list[j +
-                                                    1])
+      while (replacement.hit %in% OrthologueList_allHuman$MouseGene && !is.na(replacement.hit)) { # check if already in DF, if yes then take second hit
+        replacement.hit <- names(local.Align.list[j + 1])
         j <- j + 1
       }
-      OrthologueList_allHuman[OrthologueList_allHuman$HGNC.symbol ==
-                                mGene, ]$MouseGene = replacement.hit
+      OrthologueList_allHuman[OrthologueList_allHuman$HGNC.symbol == mGene, ]$MouseGene = replacement.hit # set orthologue
     }
   }
   else {
