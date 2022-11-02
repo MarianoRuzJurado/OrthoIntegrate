@@ -1,6 +1,6 @@
-#' Import Single cell sequencing experiments into Seurat and perform normalisation and scale Data and do a summary of mapping stats
+#' Import Single cell sequencing experiments into Seurat and perform normalisation and scale Data
 #' @author David John & Mariano Ruz Jurado
-#' @param pathways A vector of pathways to the cellrancer count output folder (contains barcodes.tsv, genes.tsv, matrix.mtx)
+#' @param pathways A vector of pathways to count output folder of mapping tool (for 10X: Directory  contains barcodes.tsv, genes.tsv, matrix.mtx)
 #' @param ids Vector of strings that are assigned to the concordant cells
 #' @param TenX Logical for TenX result analysis
 #' @param performNormalisation Logical if Seurat Normalization should be performed

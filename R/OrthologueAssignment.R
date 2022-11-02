@@ -65,7 +65,7 @@ BuildOrthologues <- function(GTF.human, GTF.mice){
 
   for (mGene in OrthologueList_allHuman$HGNC.symbol) {
     if(mGene %in% df.orth$HGNC.symbol){ #check if human gene has a mouse orthologue gene
-
+      print(mGene)
       replacement <-df.orth[df.orth$HGNC.symbol==mGene,]$MGI.symbol
       if (length(replacement)==1 && replacement== '') { #check for empty ortholog
         replacement <- NA
@@ -250,7 +250,7 @@ nucleotide.matching <- function(mGene,replacement,OrthologueList_allHuman){
 
 
   out <- mygene::queryMany(mGene, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="human")
-  outm <- try(mygene::queryMany(replacement, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="mouse"),silent = T) # use try for some genes it gives errors
+  outm <- try(mygene::queryMany(replacement, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="mouse"),silent = T) # use try for some genes there is no entry
 
   if (!("try-error" %in% class(outm)) || !is.null(out$entrezgene)) {
     #human

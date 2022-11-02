@@ -5,8 +5,8 @@
 \title{Import Single cell sequencing experiments into Seurat and perform normalisation and scale Data and do a summary of mapping stats}
 \usage{
 Importer(
-  pathway,
-  id,
+  pathways,
+  ids,
   TenX = TRUE,
   performNormalisation = TRUE,
   performScaling = FALSE,
@@ -17,6 +17,10 @@ Importer(
 )
 }
 \arguments{
+\item{pathways}{A vector of pathways to the cellrancer count output folder (contains barcodes.tsv, genes.tsv, matrix.mtx)}
+
+\item{ids}{Vector of strings that are assigned to the concordant cells}
+
 \item{TenX}{Logical for TenX result analysis}
 
 \item{performNormalisation}{Logical if Seurat Normalization should be performed}
@@ -28,10 +32,6 @@ Importer(
 \item{FilterCells}{Logical if Cells should be filtered}
 
 \item{FilterByAbsoluteValues}{Logical if Cells should be filtered by manual values, further arguments must be provided for minFeatures,maxFeatures,minCounts,maxCounts,maxMito}
-
-\item{pathways}{A vector of pathways to the cellrancer count output folder (contains barcodes.tsv, genes.tsv, matrix.mtx)}
-
-\item{ids}{Vector of strings that are assigned to the concordant cells}
 }
 \value{
 Merged seurat object
