@@ -29,8 +29,8 @@ The function returns a list with the newly created seurat objects and a list of 
 If you dont want to use an automatically calculated filtering, you can set ```FilterByAbsoluteValues = TRUE``` and set thresholds manually:
 
 ```ruby
-resultList.human <-Importer(pathways = Sample.Paths.human,ids = Samplenames.human, FilterCells = TRUE,FilterByAbsoluteValues = TRUE, performScaling = TRUE, minFeatures=300, maxFeatures=6000,minCounts=500,maxCounts=15000, maxMito=0.05)
-resultList.mice <-Importer(pathways = Sample.Paths.mice,ids = Samplenames.mice, FilterCells = TRUE,FilterByAbsoluteValues = TRUE, performScaling = TRUE, minFeatures=300, maxFeatures=6000,minCounts=500,maxCounts=15000, maxMito=0.05)
+resultList.human <- Importer(pathways = Sample.Paths.human,ids = Samplenames.human, FilterCells = TRUE,FilterByAbsoluteValues = TRUE, performScaling = TRUE, minFeatures=300, maxFeatures=6000,minCounts=500,maxCounts=15000, maxMito=0.05)
+resultList.mice <- Importer(pathways = Sample.Paths.mice,ids = Samplenames.mice, FilterCells = TRUE,FilterByAbsoluteValues = TRUE, performScaling = TRUE, minFeatures=300, maxFeatures=6000,minCounts=500,maxCounts=15000, maxMito=0.05)
 ```
 
 Additionally we can check our mapping statistics for the provided samples:
