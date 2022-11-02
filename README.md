@@ -57,9 +57,9 @@ SubsetList <- SubsetObjects(SeuratObjectList.human = resultList.human$SeuratObje
 This returns a list with the subsetted objects for our two species and a list with orthologues for the last step where we rename the subsetted objects and start the CCA Integration of seurat:
 
 ```ruby
-MouseOrthologues.humaized.list <- RenameGenesSeurat(ObjList = SubsetList$SeuratObject.mouse.combined.orthologs.list,
+HumanizedList.mice <- RenameGenesSeurat(ObjList = SubsetList$SeuratObject.mouse.combined.orthologs.list,
                                                      newnames = SubsetList$human.converted.mice.names)
-SeuratObjectList <- do.call("c",list(MouseOrthologues.humaized.list,SubsetList$SeuratObject.human.combined.orthologs.list))
+SeuratObjectList <- do.call("c",list(HumanizedList.mice,SubsetList$SeuratObject.human.combined.orthologs.list))
 SeuratObject.anchors <- Seurat::FindIntegrationAnchors(object.list = SeuratObjectList, dims = 1:20)
 SeuratObject.combined <- Seurat::IntegrateData(anchorset = SeuratObject.anchors, dims = 1:20)
 ```
