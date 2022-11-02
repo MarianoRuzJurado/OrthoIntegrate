@@ -1,5 +1,5 @@
 # OrthoIntegrate
-R package functions for Orthologue Assignment and Integration of Single Cell Samples between species
+R package functions for Orthologue Assignment and Integration of Single Cell Data between species
 
 # <b> How to install </b>
 
