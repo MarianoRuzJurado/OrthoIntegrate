@@ -65,3 +65,7 @@ SeuratObject.combined <- Seurat::IntegrateData(anchorset = SeuratObject.anchors,
 ```
 
 After this step we can continue our downstream analysis with an object containing single cell data from different species.
+
+# <b> Contribution Guidelines </b>
+Raising up an issue in this Github repository might be the fastest way of submitting suggestions and bugs.
+Alternatively you can write to my email: ruzjurado@med.uni-frankfurt.de
