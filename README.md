@@ -63,8 +63,9 @@ resultList.mice <- Importer(pathways = Sample.Paths.mice,
 Additionally we can check our mapping statistics for the provided samples:
 
 ```ruby
+# optional for summary of mapping results by CR or star solo
 MappingSummary <- SummarizeMapping(pathways = Sample.Paths.human,
-                                   ids = Samplenames.human) # optional for summary of mapping results by CR or star solo
+                                   ids = Samplenames.human) 
 ```
 
 After our data is converted to seurat objects we may start to build an orthologue list for them. We will need this list to integrate data from different species. The function needs GTF-files for our species:
