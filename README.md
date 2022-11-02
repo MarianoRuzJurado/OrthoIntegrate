@@ -1,5 +1,5 @@
 # OrthoIntegrate
-R package functions for Orthologue Assignment and Integration of Samples between species
+R package functions for Orthologue Assignment and Integration of Single Cell Samples between species
 
 # <b> How to install </b>
 
@@ -63,3 +63,5 @@ SeuratObjectList <- do.call("c",list(HumanizedList.mice,SubsetList$SeuratObject.
 SeuratObject.anchors <- Seurat::FindIntegrationAnchors(object.list = SeuratObjectList, dims = 1:20)
 SeuratObject.combined <- Seurat::IntegrateData(anchorset = SeuratObject.anchors, dims = 1:20)
 ```
+
+After this step we can continue our downstream analysis with an object containing single cell data from different species.
