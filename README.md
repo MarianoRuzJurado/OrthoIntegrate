@@ -75,7 +75,7 @@ OrthologueList <- BuildOrthologues(GTF.human = ".../Humangenes.gtf",
                                    GTF.mice = ".../Micegenes.gtf")
 ```
 
-It will start define orthologues for our genes by using the Ensembl, Uniprot and NCBI database by creating a global usebale list.
+It will start define orthologues for our genes by using the Ensembl, Uniprot and NCBI database by creating a global useable list.
 After this step finished, we can subset our seurat objects by the found orthologues:
 
 ```ruby
