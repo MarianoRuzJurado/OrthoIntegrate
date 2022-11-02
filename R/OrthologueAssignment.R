@@ -65,7 +65,6 @@ BuildOrthologues <- function(GTF.human, GTF.mice){
 
   for (mGene in OrthologueList_allHuman$HGNC.symbol) {
     if(mGene %in% df.orth$HGNC.symbol){ #check if human gene has a mouse orthologue gene
-      print(mGene)
       replacement <-df.orth[df.orth$HGNC.symbol==mGene,]$MGI.symbol
       if (length(replacement)==1 && replacement== '') { #check for empty ortholog
         replacement <- NA
