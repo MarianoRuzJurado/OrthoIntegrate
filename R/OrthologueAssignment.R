@@ -1,4 +1,4 @@
-#' ensembl database orthologue settin using biomart function, converting human genes into mouse genes
+#' ensembl database orthologue setting using biomart function, converting mouse genes into human genes
 #' @author Mariano Ruz Jurado
 #' @param GeneNames Vector of Human gene names
 #' @return List with converted Names based on ensembl database entries
@@ -11,7 +11,7 @@ returnOrthologueslist <- function(GeneNames){
   return(genesV2)
 }
 
-#' function for uppercase the first letter of a character
+#' function for uppercasing the first letter of a character
 #' @author Mariano Ruz Jurado
 #' @param x character
 #' @return character with first letter uppercase
