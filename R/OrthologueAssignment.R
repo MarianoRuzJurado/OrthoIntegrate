@@ -147,9 +147,9 @@ BuildOrthologues <- function(GTF.human, GTF.mice){
 #' @export
 protein.matching <- function (mGene, replacement, OrthologueList_allHuman)
 {
-  outh <- mygene::queryMany(mGene, scopes = "symbol", fields = c("entrezgene","uniprot"), species = "human")
+  outh <- try(queryMany(mGene, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="human"),silent = T)
   outm <- try(mygene::queryMany(replacement, scopes = "symbol",fields = c("entrezgene", "uniprot"), species = "mouse"),silent = T) #some mouse genes cant be handled by mygene
-  if (!("try-error" %in% class(outm))) {
+  if (!("try-error" %in% class(outm)) && !("try-error" %in% class(outh))) {
     uniprot.mice <- list()
     for (i in 1:nrow(outm)) {
       if (!is.null(unlist(outm[i, ]$uniprot.TrEMBL))) {
@@ -240,10 +240,10 @@ protein.matching <- function (mGene, replacement, OrthologueList_allHuman)
 nucleotide.matching <- function(mGene,replacement,OrthologueList_allHuman){
 
 
-  out <- mygene::queryMany(mGene, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="human")
+  out <- try(queryMany(mGene, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="human"),silent = T)
   outm <- try(mygene::queryMany(replacement, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="mouse"),silent = T) # use try for some genes there is no entry
 
-  if (!("try-error" %in% class(outm)) || !is.null(out$entrezgene)) {
+  if (!("try-error" %in% class(outm)) && !("try-error" %in% class(outh))) {
     #human
     linked_seq_ids <- rentrez::entrez_link(dbfrom = "gene", id=out$entrezgene, db="nuccore")
     linked_transcripts <- linked_seq_ids$links$gene_nuccore_refseqrna
