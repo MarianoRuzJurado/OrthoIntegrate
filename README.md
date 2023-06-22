@@ -6,7 +6,7 @@ R package functions for Orthologue Assignment and Integration of Single Cell Dat
 Install through github:
 
 ```ruby
-devtools::install_github("MarianoRuzJurado/OrthoIntegrate", upgrade_dependencies = FALSE)
+devtools::install_github("MarianoRuzJurado/OrthoIntegrate")
 ```
 
 # <b> How to use it </b>
