@@ -2,7 +2,7 @@
 % Please edit documentation in R/Importer.R
 \name{Importer}
 \alias{Importer}
-\title{Import Single cell sequencing experiments into Seurat and perform normalisation and scale Data and do a summary of mapping stats}
+\title{Import Single cell sequencing experiments into Seurat and perform normalisation and scale Data}
 \usage{
 Importer(
   pathways,
@@ -17,7 +17,7 @@ Importer(
 )
 }
 \arguments{
-\item{pathways}{A vector of pathways to the cellrancer count output folder (contains barcodes.tsv, genes.tsv, matrix.mtx)}
+\item{pathways}{A vector of pathways to count output folder of mapping tool (for 10X: Directory  contains barcodes.tsv, genes.tsv, matrix.mtx)}
 
 \item{ids}{Vector of strings that are assigned to the concordant cells}
 
@@ -37,7 +37,7 @@ Importer(
 Merged seurat object
 }
 \description{
-Import Single cell sequencing experiments into Seurat and perform normalisation and scale Data and do a summary of mapping stats
+Import Single cell sequencing experiments into Seurat and perform normalisation and scale Data
 }
 \author{
 David John & Mariano Ruz Jurado

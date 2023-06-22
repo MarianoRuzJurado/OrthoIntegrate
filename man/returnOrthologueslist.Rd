@@ -2,7 +2,7 @@
 % Please edit documentation in R/OrthologueAssignment.R
 \name{returnOrthologueslist}
 \alias{returnOrthologueslist}
-\title{ensembl database orthologue settin using biomart function, converting human genes into mouse genes}
+\title{ensembl database orthologue setting using biomart function, converting mouse genes into human genes}
 \usage{
 returnOrthologueslist(GeneNames)
 }
@@ -13,7 +13,7 @@ returnOrthologueslist(GeneNames)
 List with converted Names based on ensembl database entries
 }
 \description{
-ensembl database orthologue settin using biomart function, converting human genes into mouse genes
+ensembl database orthologue setting using biomart function, converting mouse genes into human genes
 }
 \author{
 Mariano Ruz Jurado

@@ -5,7 +5,7 @@
 \title{Summarize mapping statistics
 This function reads in the summary file about the mapping with CellRanger or Starsolo and gives warnings if values surpass a threshold}
 \usage{
-SummarizeMapping(pathway, id)
+SummarizeMapping(pathways, ids)
 }
 \arguments{
 \item{pathway}{A vector of pathways to the cellranger/star solo count result}

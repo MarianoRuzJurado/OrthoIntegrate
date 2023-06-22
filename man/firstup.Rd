@@ -2,7 +2,7 @@
 % Please edit documentation in R/OrthologueAssignment.R
 \name{firstup}
 \alias{firstup}
-\title{function for uppercase the first letter of a character}
+\title{function for uppercasing the first letter of a character}
 \usage{
 firstup(x)
 }
@@ -13,7 +13,7 @@ firstup(x)
 character with first letter uppercase
 }
 \description{
-function for uppercase the first letter of a character
+function for uppercasing the first letter of a character
 }
 \author{
 Mariano Ruz Jurado
