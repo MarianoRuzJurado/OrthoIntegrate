@@ -41,17 +41,17 @@ FilterDeadCellsByQuantile <- function(seuratObject, lowQuantile=0.1 , highQuanti
 
   gg1<- ggplot2::ggplot(Quality, ggplot2::aes(x="nUMI", y=UMI)) + ggplot2::geom_violin(scale = "width") +
     ggplot2::theme(axis.title.x = ggplot2::element_blank(),axis.ticks.x = ggplot2::element_blank(), legend.position = "none", axis.text.x = ggplot2::element_text(size=12, face = "bold"), axis.title.y = ggplot2::element_blank(), axis.text.y = ggplot2::element_text(size=10)) +
-    ggplot2::geom_hline(yintercept = Quantile.high.UMI$value, color="red", linetype="dashed") + ggplot2::geom_text(aes(0.9,Quantile.high.UMI$value, label=Quantile.high.UMI$value , vjust = -1)) +
-    ggplot2::geom_hline(yintercept = Quantile.low.UMI$value, color="red", linetype="dashed") + ggplot2::geom_text(aes(0.9,Quantile.low.UMI$value, label=Quantile.low.UMI$value , vjust = -1))
+    ggplot2::geom_hline(yintercept = Quantile.high.UMI$value, color="red", linetype="dashed") + ggplot2::geom_text(ggplot2::aes(0.9,Quantile.high.UMI$value, label=Quantile.high.UMI$value , vjust = -1)) +
+    ggplot2::geom_hline(yintercept = Quantile.low.UMI$value, color="red", linetype="dashed") + ggplot2::geom_text(ggplot2::aes(0.9,Quantile.low.UMI$value, label=Quantile.low.UMI$value , vjust = -1))
 
   gg2<- ggplot2::ggplot(Quality, ggplot2::aes(x="nFeature_RNA", y=nGene)) + ggplot2::geom_violin(scale = "width") +
     ggplot2::theme(axis.title.x = ggplot2::element_blank(),axis.ticks.x = ggplot2::element_blank(), legend.position = "none", axis.text.x = ggplot2::element_text(size=12, face = "bold"), axis.title.y = ggplot2::element_blank(), axis.text.y = ggplot2::element_text(size=10)) +
-    ggplot2::geom_hline(yintercept = Quantile.high.Gene$value, color="red", linetype="dashed") + ggplot2::geom_text(aes(0.9,Quantile.high.Gene$value, label=Quantile.high.Gene$value , vjust = -1)) +   ggplot2::geom_hline(yintercept = Quantile.low.Gene$value, color="red", linetype="dashed") + ggplot2::geom_text(aes(0.9,Quantile.low.Gene$value, label=Quantile.low.Gene$value , vjust = -1))
+    ggplot2::geom_hline(yintercept = Quantile.high.Gene$value, color="red", linetype="dashed") + ggplot2::geom_text(ggplot2::aes(0.9,Quantile.high.Gene$value, label=Quantile.high.Gene$value , vjust = -1)) +   ggplot2::geom_hline(yintercept = Quantile.low.Gene$value, color="red", linetype="dashed") + ggplot2::geom_text(ggplot2::aes(0.9,Quantile.low.Gene$value, label=Quantile.low.Gene$value , vjust = -1))
 
 
   gg3<- ggplot2::ggplot(Quality, ggplot2::aes(x=" % Mt Content", y=percent.mito)) + ggplot2::geom_violin(scale = "width") +
     ggplot2::theme(axis.title.x = ggplot2::element_blank(),axis.ticks.x = ggplot2::element_blank(), legend.position = "none", axis.text.x = ggplot2::element_text(size=12, face = "bold"), axis.title.y = ggplot2::element_blank(), axis.text.y = ggplot2::element_text(size=10)) +
-    ggplot2::geom_hline(yintercept = maxMito, color="red", linetype="dashed") + ggplot2::geom_text(aes(0.9,maxMito, label=maxMito , vjust = -1))
+    ggplot2::geom_hline(yintercept = maxMito, color="red", linetype="dashed") + ggplot2::geom_text(ggplot2::aes(0.9,maxMito, label=maxMito , vjust = -1))
 
   gg<-ggpubr::ggarrange(gg1,gg2,gg3, ncol = 3)
 
