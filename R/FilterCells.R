@@ -20,20 +20,20 @@ FilterDeadCellsByQuantile <- function(seuratObject, lowQuantile=0.1 , highQuanti
   sample<-unique(seuratObject$sample)
   Quality <- data.frame(UMI=seuratObject$nCount_RNA, nGene=seuratObject$nFeature_RNA, label = factor(seuratObject$sample), percent.mito=seuratObject$percent.mito)
 
-  Quantile.low.UMI <- Quality %>% dplyr::group_by(label) %>%
-    dplyr::summarise(UMI = list(enframe(quantile(UMI,probs = lowQuantile)))) %>%
+  Quantile.low.UMI <- Quality |> dplyr::group_by(label) |>
+    dplyr::summarise(UMI = list(enframe(quantile(UMI,probs = lowQuantile)))) |>
     tidyr::unnest(cols = c(UMI))
 
-  Quantile.high.UMI <- Quality %>% dplyr::group_by(label) %>%
-    dplyr::summarise(UMI = list(enframe(quantile(UMI,probs = highQuantile)))) %>%
+  Quantile.high.UMI <- Quality |> dplyr::group_by(label) |>
+    dplyr::summarise(UMI = list(enframe(quantile(UMI,probs = highQuantile)))) |>
     tidyr::unnest(cols = c(UMI))
 
-  Quantile.low.Gene <- Quality %>% dplyr::group_by(label) %>%
-    dplyr::summarise(nGene = list(enframe(quantile(nGene,probs = lowQuantile)))) %>%
+  Quantile.low.Gene <- Quality |> dplyr::group_by(label) |>
+    dplyr::summarise(nGene = list(enframe(quantile(nGene,probs = lowQuantile)))) |>
     tidyr::unnest(cols = c(nGene))
 
-  Quantile.high.Gene <- Quality %>% dplyr::group_by(label) %>%
-    dplyr::summarise(nGene = list(enframe(quantile(nGene,probs = highQuantile)))) %>%
+  Quantile.high.Gene <- Quality |> dplyr::group_by(label) |>
+    dplyr::summarise(nGene = list(enframe(quantile(nGene,probs = highQuantile)))) |>
     tidyr::unnest(cols = c(nGene))
 
 
