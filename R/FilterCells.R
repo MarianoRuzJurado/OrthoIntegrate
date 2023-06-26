@@ -6,7 +6,7 @@
 #' We use raw count data since this represents non-transformed and non-log-normalized counts
 #' The % of UMI mapping to MT-features is a common scRNA-seq QC metric.
 #'
-#' @author David John
+#' @author David John & Mariano Ruz Jurado
 #' @param seuratObject a Seurat Object
 #' @return filtered seurat object
 #' @export
@@ -20,21 +20,21 @@ FilterDeadCellsByQuantile <- function(seuratObject, lowQuantile=0.1 , highQuanti
   sample<-unique(seuratObject$sample)
   Quality <- data.frame(UMI=seuratObject$nCount_RNA, nGene=seuratObject$nFeature_RNA, label = factor(seuratObject$sample), percent.mito=seuratObject$percent.mito)
 
-  Quantile.low.UMI <- Quality %>% group_by(label) %>%
-    summarise(UMI = list(enframe(quantile(UMI,probs = lowQuantile)))) %>%
-    unnest(cols = c(UMI))
+  Quantile.low.UMI <- Quality %>% dplyr::group_by(label) %>%
+    dplyr::summarise(UMI = list(enframe(quantile(UMI,probs = lowQuantile)))) %>%
+    tidyr::unnest(cols = c(UMI))
 
-  Quantile.high.UMI <- Quality %>% group_by(label) %>%
-    summarise(UMI = list(enframe(quantile(UMI,probs = highQuantile)))) %>%
-    unnest(cols = c(UMI))
+  Quantile.high.UMI <- Quality %>% dplyr::group_by(label) %>%
+    dplyr::summarise(UMI = list(enframe(quantile(UMI,probs = highQuantile)))) %>%
+    tidyr::unnest(cols = c(UMI))
 
-  Quantile.low.Gene <- Quality %>% group_by(label) %>%
-    summarise(nGene = list(enframe(quantile(nGene,probs = lowQuantile)))) %>%
-    unnest(cols = c(nGene))
+  Quantile.low.Gene <- Quality %>% dplyr::group_by(label) %>%
+    dplyr::summarise(nGene = list(enframe(quantile(nGene,probs = lowQuantile)))) %>%
+    tidyr::unnest(cols = c(nGene))
 
-  Quantile.high.Gene <- Quality %>% group_by(label) %>%
-    summarise(nGene = list(enframe(quantile(nGene,probs = highQuantile)))) %>%
-    unnest(cols = c(nGene))
+  Quantile.high.Gene <- Quality %>% dplyr::group_by(label) %>%
+    dplyr::summarise(nGene = list(enframe(quantile(nGene,probs = highQuantile)))) %>%
+    tidyr::unnest(cols = c(nGene))
 
 
   df<-seuratObject@meta.data
