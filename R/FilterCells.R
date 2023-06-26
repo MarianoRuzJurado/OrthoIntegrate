@@ -21,19 +21,19 @@ FilterDeadCellsByQuantile <- function(seuratObject, lowQuantile=0.1 , highQuanti
   Quality <- data.frame(UMI=seuratObject$nCount_RNA, nGene=seuratObject$nFeature_RNA, label = factor(seuratObject$sample), percent.mito=seuratObject$percent.mito)
 
   Quantile.low.UMI <- Quality |> dplyr::group_by(label) |>
-    dplyr::summarise(UMI = list(enframe(quantile(UMI,probs = lowQuantile)))) |>
+    dplyr::summarise(UMI = list(tibble::enframe(quantile(UMI,probs = lowQuantile)))) |>
     tidyr::unnest(cols = c(UMI))
 
   Quantile.high.UMI <- Quality |> dplyr::group_by(label) |>
-    dplyr::summarise(UMI = list(enframe(quantile(UMI,probs = highQuantile)))) |>
+    dplyr::summarise(UMI = list(tibble::enframe(quantile(UMI,probs = highQuantile)))) |>
     tidyr::unnest(cols = c(UMI))
 
   Quantile.low.Gene <- Quality |> dplyr::group_by(label) |>
-    dplyr::summarise(nGene = list(enframe(quantile(nGene,probs = lowQuantile)))) |>
+    dplyr::summarise(nGene = list(tibble::enframe(quantile(nGene,probs = lowQuantile)))) |>
     tidyr::unnest(cols = c(nGene))
 
   Quantile.high.Gene <- Quality |> dplyr::group_by(label) |>
-    dplyr::summarise(nGene = list(enframe(quantile(nGene,probs = highQuantile)))) |>
+    dplyr::summarise(nGene = list(tibble::enframe(quantile(nGene,probs = highQuantile)))) |>
     tidyr::unnest(cols = c(nGene))
 
 
