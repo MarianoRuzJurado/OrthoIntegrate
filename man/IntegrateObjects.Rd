@@ -4,14 +4,14 @@
 \alias{IntegrateObjects}
 \title{Wrapper function for SubsetObject and RenameGenesSeurat as well as the Seurat integration steps}
 \usage{
-IntegrateObjects(OrthologueList, SeuratObjectList.mice, SeuratObjectList.human)
+IntegrateObjects(SeuratObjectList.human, SeuratObjectList.mice, OrthologueList)
 }
 \arguments{
-\item{OrthologueList}{previous mad elist with 1 to 1 ortholgue assignment}
+\item{SeuratObjectList.human}{list with human seurat objects to subset by orthologues}
 
 \item{SeuratObjectList.mice}{list with mouse objects to subset by found orthologues}
 
-\item{SeuratObjectList.human}{list with human seurat objects to subset by orthologues}
+\item{OrthologueList}{previously made list with 1 to 1 ortholgue assignment}
 }
 \value{
 Integrated Human/Mouse Seurat object with Human Nomenclature
