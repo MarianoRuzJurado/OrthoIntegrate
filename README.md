@@ -76,21 +76,26 @@ OrthologueList <- BuildOrthologues(GTF.human = ".../Humangenes.gtf",
 ```
 
 It will start define orthologues for our genes by using the Ensembl, Uniprot and NCBI database by creating a global useable list.
-After this step finished, we can subset our seurat objects by the found orthologues:
+After this step finished, we can subset our seurat objects by the found orthologues and integrate them into one object:
+
+```ruby
+SeuratObject.combined <- IntegrateObjects(OrthologueList = OrthoIntegrate,
+                                          SeuratObjectList.human = resultList.human$SeuratObjects,
+                                          SeuratObjectList.mice = resultList.mice$SeuratObjects)
+```
+
+If you are interested in how the subsetted objects look like after comparing with the found orthologues use the ```SubsetObjects``` function:
 
 ```ruby
 SubsetList <- SubsetObjects(SeuratObjectList.human = resultList.human$SeuratObjects,
                             SeuratObjectList.mice = resultList.mice$SeuratObjects,
                             OrthologueList = OrthologueList)
 ```
-This returns a list with the subsetted objects for our two species and a list with orthologues for the last step where we rename the subsetted objects and start the CCA Integration of seurat:
+This returns a list with the subsetted objects for our two species. Additionally, you can assign just the new nomenclature:
 
 ```ruby
 HumanizedList.mice <- RenameGenesSeurat(ObjList = SubsetList$SeuratObject.mouse.combined.orthologs.list,
                                         newnames = SubsetList$human.converted.mice.names)
-SeuratObjectList <- do.call("c",list(HumanizedList.mice,SubsetList$SeuratObject.human.combined.orthologs.list))
-SeuratObject.anchors <- Seurat::FindIntegrationAnchors(object.list = SeuratObjectList, dims = 1:20)
-SeuratObject.combined <- Seurat::IntegrateData(anchorset = SeuratObject.anchors, dims = 1:20)
 ```
 
 After this step we can continue our downstream analysis with an object containing single cell data from different species.
