@@ -79,7 +79,7 @@ It will start define orthologues for our genes by using the Ensembl, Uniprot and
 After this step finished, we can subset our seurat objects by the found orthologues and integrate them into one object:
 
 ```ruby
-SeuratObject.combined <- IntegrateObjects(OrthologueList = OrthoIntegrate,
+SeuratObject.combined <- IntegrateObjects(OrthologueList = OrthologueList,
                                           SeuratObjectList.human = resultList.human$SeuratObjects,
                                           SeuratObjectList.mice = resultList.mice$SeuratObjects)
 ```
