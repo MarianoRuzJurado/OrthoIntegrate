@@ -83,22 +83,24 @@ SeuratObject.combined <- IntegrateObjects(OrthologueList = OrthoIntegrate,
                                           SeuratObjectList.human = resultList.human$SeuratObjects,
                                           SeuratObjectList.mice = resultList.mice$SeuratObjects)
 ```
+After succesful integration, we can continue our downstream analysis with an object containing single cell data from different species.
 
-If you are interested in how the subsetted objects look like after comparing with the found orthologues use the ```SubsetObjects``` function:
+<hr>
+
+If you are interested in how the objects changed after subsetting with the found orthologues use the ```SubsetObjects``` function:
 
 ```ruby
 SubsetList <- SubsetObjects(SeuratObjectList.human = resultList.human$SeuratObjects,
                             SeuratObjectList.mice = resultList.mice$SeuratObjects,
                             OrthologueList = OrthologueList)
 ```
-This returns a list with the subsetted objects for our two species. Additionally, you can assign just the new nomenclature:
+This returns a list with the subsetted objects for our two species. Maybe you want to check the new nomeneclature on the objects. This can be achieved by using the RenamesGenesSeurat function on ```SubsetList```:
 
 ```ruby
 HumanizedList.mice <- RenameGenesSeurat(ObjList = SubsetList$SeuratObject.mouse.combined.orthologs.list,
                                         newnames = SubsetList$human.converted.mice.names)
 ```
 
-After this step we can continue our downstream analysis with an object containing single cell data from different species.
 
 # <b> Contribution Guidelines </b>
 Raising up an issue in this Github repository might be the fastest way of submitting suggestions and bugs.
