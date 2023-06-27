@@ -91,8 +91,8 @@ If you are interested in how the objects changed after subsetting with the found
 
 ```ruby
 SubsetList <- SubsetObjects(OrthologueList = OrthologueList,
-                                          SeuratObjectList.human = resultList.human$SeuratObjects,
-                                          SeuratObjectList.mice = resultList.mice$SeuratObjects)
+                            SeuratObjectList.human = resultList.human$SeuratObjects,
+                            SeuratObjectList.mice = resultList.mice$SeuratObjects)
 ```
 This returns a list with the subsetted objects for our two species. Maybe you want to check the new nomeneclature on the objects. This can be achieved by using the RenamesGenesSeurat function on ```SubsetList```:
 
