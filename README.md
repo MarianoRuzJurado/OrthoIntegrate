@@ -90,9 +90,9 @@ After succesful integration, we can continue our downstream analysis with an obj
 If you are interested in how the objects changed after subsetting with the found orthologues use the ```SubsetObjects``` function:
 
 ```ruby
-SubsetList <- SubsetObjects(SeuratObjectList.human = resultList.human$SeuratObjects,
-                            SeuratObjectList.mice = resultList.mice$SeuratObjects,
-                            OrthologueList = OrthologueList)
+SubsetList <- SubsetObjects(OrthologueList = OrthologueList,
+                                          SeuratObjectList.human = resultList.human$SeuratObjects,
+                                          SeuratObjectList.mice = resultList.mice$SeuratObjects)
 ```
 This returns a list with the subsetted objects for our two species. Maybe you want to check the new nomeneclature on the objects. This can be achieved by using the RenamesGenesSeurat function on ```SubsetList```:
 
