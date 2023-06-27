@@ -119,9 +119,9 @@ RenameGenesSeurat <- function(ObjList, newnames) { # Replace gene names in diffe
 #' @param SeuratObjectList.human list with human seurat objects to subset by orthologues
 #' @return Integrated Human/Mouse Seurat object with Human Nomenclature
 #' @export
-IntegrateObjects <- function(OrthologueList,SeuratObjectList.human,SeuratObjectList.mice){
-  SubsetList <- SubsetObjects(SeuratObjectList.human$SeuratObjects,
-                              SeuratObjectList.mice$SeuratObjects,
+IntegrateObjects <- function(SeuratObjectList.human,SeuratObjectList.mice,OrthologueList){
+  SubsetList <- SubsetObjects(SeuratObjectList.human,
+                              SeuratObjectList.mice,
                               OrthologueList)
 
   HumanizedList.mice <- RenameGenesSeurat(ObjList = SubsetList$SeuratObject.mouse.combined.orthologs.list,
