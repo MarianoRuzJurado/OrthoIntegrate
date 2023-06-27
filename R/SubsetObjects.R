@@ -112,3 +112,23 @@ RenameGenesSeurat <- function(ObjList, newnames) { # Replace gene names in diffe
   return(SeuratObject.mouse.combined.orthologs.humanized.list)
 }
 
+#' Wrapper function for SubsetObject and RenameGenesSeurat as well as the Seurat integration steps
+#' @author Mariano Ruz Jurado
+#' @param SeuratObjectList.mice list with mouse objects to subset by found orthologues
+#' @param OrthologueList previous mad elist with 1 to 1 ortholgue assignment
+#' @param SeuratObjectList.human list with human seurat objects to subset by orthologues
+#' @return Integrated Human/Mouse Seurat object with Human Nomenclature
+#' @export
+IntegrateObjects <- function(OrthologueList,SeuratObjectList.mice,SeuratObjectList.human){
+  SubsetList <- SubsetObjects(SeuratObjectList.human = resultList.human,
+                              SeuratObjectList.mice = resultList.mice$SeuratObjects,
+                              OrthologueList = OrthologueList)
+
+  HumanizedList.mice <- RenameGenesSeurat(ObjList = SubsetList$SeuratObject.mouse.combined.orthologs.list,
+                                         newnames = SubsetList$human.converted.mice.names)
+
+  SeuratObjectList <- do.call("c",list(HumanizedList.mice,SubsetList$SeuratObject.human.combined.orthologs.list))
+  SeuratObject.anchors <- Seurat::FindIntegrationAnchors(object.list = SeuratObjectList, dims = 1:20)
+  SeuratObject.combined <- Seurat::IntegrateData(anchorset = SeuratObject.anchors, dims = 1:20)
+
+}

@@ -25,5 +25,5 @@ We use raw count data since this represents non-transformed and non-log-normaliz
 The \% of UMI mapping to MT-features is a common scRNA-seq QC metric.
 }
 \author{
-David John
+David John & Mariano Ruz Jurado
 }
