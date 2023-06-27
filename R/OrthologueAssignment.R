@@ -243,7 +243,7 @@ nucleotide.matching <- function(mGene,replacement,OrthologueList_allHuman){
   out <- try(mygene::queryMany(mGene, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="human"),silent = T)
   outm <- try(mygene::queryMany(replacement, scopes = "symbol", fields= c("entrezgene", "uniprot"),species ="mouse"),silent = T) # use try for some genes there is no entry
 
-  if (!("try-error" %in% class(outm)) && !("try-error" %in% class(outh))) {
+  if (!("try-error" %in% class(outm)) && !("try-error" %in% class(out))) {
     #human
     linked_seq_ids <- rentrez::entrez_link(dbfrom = "gene", id=out$entrezgene, db="nuccore")
     linked_transcripts <- linked_seq_ids$links$gene_nuccore_refseqrna
