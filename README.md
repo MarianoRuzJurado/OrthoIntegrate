@@ -68,18 +68,18 @@ MappingSummary <- SummarizeMapping(pathways = Sample.Paths.human,
                                    ids = Samplenames.human) 
 ```
 
-After our data is converted to seurat objects we may start to build an orthologue list for them. We will need this list to integrate data from different species. The function needs GTF-files for our species:
+After our data is converted to seurat objects we may start to build a table containing orthologues for them. We will need this table to integrate samples from different species. The function needs GTF-files for our species:
 
 ```ruby
-OrthologueList <- BuildOrthologues(GTF.human = ".../Humangenes.gtf",
+Orthologue.DF <- BuildOrthologues(GTF.human = ".../Humangenes.gtf",
                                    GTF.mice = ".../Micegenes.gtf")
 ```
 
-It will start define orthologues for our genes by using the Ensembl, Uniprot and NCBI database by creating a global useable list.
+It will start define orthologues for our genes by using the Ensembl, Uniprot and NCBI database by creating a global useable table.
 After this step finished, we can subset our seurat objects by the found orthologues and integrate them into one object:
 
 ```ruby
-SeuratObject.combined <- IntegrateObjects(OrthologueList = OrthologueList,
+SeuratObject.combined <- IntegrateObjects(OrthologueList = Orthologue.DF,
                                           SeuratObjectList.human = resultList.human$SeuratObjects,
                                           SeuratObjectList.mice = resultList.mice$SeuratObjects)
 ```
@@ -90,7 +90,7 @@ After succesful integration, we can continue our downstream analysis with an obj
 If you are interested in how the objects changed after subsetting with the found orthologues use the ```SubsetObjects``` function:
 
 ```ruby
-SubsetList <- SubsetObjects(OrthologueList = OrthologueList,
+SubsetList <- SubsetObjects(OrthologueList = Orthologue.DF,
                             SeuratObjectList.human = resultList.human$SeuratObjects,
                             SeuratObjectList.mice = resultList.mice$SeuratObjects)
 ```
