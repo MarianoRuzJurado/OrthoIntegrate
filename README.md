@@ -71,8 +71,12 @@ MappingSummary <- SummarizeMapping(pathways = Sample.Paths.human,
 After our data is converted to seurat objects we may start to build a table containing orthologues for them. We will need this table to integrate samples from different species. The function needs GTF-files for our species:
 
 ```ruby
-Orthologue.DF <- BuildOrthologues(GTF.human = ".../Humangenes.gtf",
-                                   GTF.mice = ".../Micegenes.gtf")
+Orthologue.DF <- BuildOrthologues(GTF.1 = ".../Humangenes.gtf",
+                                  GTF.2 = ".../Micegenes.gtf",
+                                  species.1 = "human",
+                                  species.2 = "mice")
+
+# I strongly recommend to save the Orthologue.DF file for future use.
 ```
 
 It will start define orthologues for our genes by using the Ensembl, Uniprot and NCBI database by creating a global useable table.
