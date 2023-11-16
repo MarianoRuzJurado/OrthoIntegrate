@@ -4,10 +4,14 @@
 \alias{returnOrthologueslist}
 \title{ensembl database orthologue setting using biomart function, converting mouse genes into human genes}
 \usage{
-returnOrthologueslist(GeneNames)
+returnOrthologueslist(GeneNames, species.1, species.2)
 }
 \arguments{
 \item{GeneNames}{Vector of Human gene names}
+
+\item{species.1}{name of the first species e.g. human, mouse, zebrafish, more to come...}
+
+\item{species.2}{name of the second species e.g. human, mouse, zebrafish, more to come...}
 }
 \value{
 List with converted Names based on ensembl database entries

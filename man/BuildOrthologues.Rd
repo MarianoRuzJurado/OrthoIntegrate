@@ -4,12 +4,18 @@
 \alias{BuildOrthologues}
 \title{Main function for Builduing a global useable Orthologue List}
 \usage{
-BuildOrthologues(GTF.human, GTF.mice)
+BuildOrthologues(GTF.1, GTF.2, species.1, species.2, alignment_type = "global")
 }
 \arguments{
-\item{GTF.human}{path to GTF file for human genome}
+\item{GTF.1}{path to GTF file for e.g. human genome}
 
-\item{GTF.mice}{path to GTF file for mice genome}
+\item{GTF.2}{path to GTF file for e.g. mice genome}
+
+\item{species.1}{name of the first species e.g. human, mouse, zebrafish, more to come...}
+
+\item{species.2}{name of the second species e.g. human, mouse, zebrafish, more to come...}
+
+\item{alignment_type}{Set the type of alignment for orthologue assignment, default is "global" for Needleman-Wunsch, use "local" for Smith-Waterman}
 }
 \value{
 List with uniquely assigned Orthologues between Human and mice

@@ -1,18 +1,18 @@
 #' Subsets objects by orthologues found in the global list and gives Human gene names for Mouse objects
 #' @author Mariano Ruz Jurado
-#' @param SeuratObjectList.mice list with mouse objects to subset by found orthologues
+#' @param SeuratObjectList.species.1 list with objects of species 1 to subset by found orthologues
 #' @param OrthologueList previous mad elist with 1 to 1 orthologue assignment
-#' @param SeuratObjectList.human list with human seurat objects to subset by orthologues
+#' @param SeuratObjectList.species.2 list with seurat objects of species 2 to subset by orthologues
 #' @return list containing sublists with subsetted objects
 #' @export
-SubsetObjects <- function(OrthologueList,SeuratObjectList.mice,SeuratObjectList.human){
+SubsetObjects <- function(OrthologueList,SeuratObjectList.species.1,SeuratObjectList.species.2){
   #for loop containing sub setting mice by all found orthologues and converting mice names in human orthologues
   SeuratObject.mouse.combined.orthologs.list <- list()
   human.converted <- list()
 
-  for (i in 1:length(SeuratObjectList.mice)) {
+  for (i in 1:length(SeuratObjectList.species.2)) {
 
-    mouseGenes<-rownames(SeuratObjectList.mice[[i]]@assays$RNA)
+    mouseGenes<-rownames(SeuratObjectList.species.2[[i]]@assays$RNA)
     mouseGenes.overlap <- character()
     human.names <- character()
     for (j in 1:length(mouseGenes)) {
@@ -25,7 +25,7 @@ SubsetObjects <- function(OrthologueList,SeuratObjectList.mice,SeuratObjectList.
 
     #Feature names with human ortholog
     mouseGenes.overlap <- mouseGenes.overlap[complete.cases(mouseGenes.overlap)]
-    SeuratObject.mouse.combined.orthologs.list[[i]]<-subset(SeuratObjectList.mice[[i]]
+    SeuratObject.mouse.combined.orthologs.list[[i]]<-subset(SeuratObjectList.species.2[[i]]
                                                             , features = mouseGenes.overlap)
 
     orthologlist.overlap <- rownames(SeuratObject.mouse.combined.orthologs.list[[i]])
@@ -42,7 +42,7 @@ SubsetObjects <- function(OrthologueList,SeuratObjectList.mice,SeuratObjectList.
     stats.converting.mouse <- data.frame(rownames.length.object.before=length(mouseGenes)
                                    ,rownames.length.of.object.subsetted=length(orthologlist.overlap)
                                    ,rownames.length.object.converted=length(human.converted[[i]])
-                                   ,row.names = levels(SeuratObjectList.mice[[i]]$orig.ident))
+                                   ,row.names = levels(SeuratObjectList.species.2[[i]]$orig.ident))
     # #write out
     # write.xlsx(stats.converting,file = paste0(outputFolder,"/Orthologuestats/"
     #                                           ,levels(SeuratObjectList.mice[[i]]$orig.ident)
@@ -51,9 +51,9 @@ SubsetObjects <- function(OrthologueList,SeuratObjectList.mice,SeuratObjectList.
 
   #for loop containing subsetting human by all found orthologues
   SeuratObject.human.combined.orthologs.list <- list()
-  for (i in 1:length(SeuratObjectList.human)) {
+  for (i in 1:length(SeuratObjectList.species.1)) {
 
-    humanGenes<-rownames(SeuratObjectList.human[[i]]@assays$RNA)
+    humanGenes<-rownames(SeuratObjectList.species.1[[i]]@assays$RNA)
     humanGenes.overlap <- character()
     humanGenes.no.ortholog <- character()
     for (j in 1:length(humanGenes)) {
@@ -68,12 +68,12 @@ SubsetObjects <- function(OrthologueList,SeuratObjectList.mice,SeuratObjectList.
     humanGenes.overlap <- humanGenes.overlap[complete.cases(humanGenes.overlap)]
     #Feature names without human ortholog
     humanGenes.no.ortholog <- humanGenes.no.ortholog[complete.cases(humanGenes.no.ortholog)]
-    SeuratObject.human.combined.orthologs.list[[i]]<-subset(SeuratObjectList.human[[i]]
+    SeuratObject.human.combined.orthologs.list[[i]]<-subset(SeuratObjectList.species.1[[i]]
                                                             , features = humanGenes.overlap)
     #get stats for sample
     stats.converting.human <- data.frame(rownames.length.object.before=length(humanGenes)
                                    ,rownames.length.of.object.subsetted=length(humanGenes.overlap)
-                                   ,row.names = levels(SeuratObjectList.human[[i]]$orig.ident))
+                                   ,row.names = levels(SeuratObjectList.species.1[[i]]$orig.ident))
     # #write out
     # write.xlsx(stats.converting,file = paste0(outputFolder,"/Orthologuestats/"
     #                                           ,levels(SeuratObjectList.human[[i]]$orig.ident)
@@ -81,9 +81,9 @@ SubsetObjects <- function(OrthologueList,SeuratObjectList.mice,SeuratObjectList.
 
   }
   Resultlist <- list() # build a list with names
-  Resultlist[["SeuratObject.mouse.combined.orthologs.list"]] <- SeuratObject.mouse.combined.orthologs.list
-  Resultlist[["SeuratObject.human.combined.orthologs.list"]] <- SeuratObject.human.combined.orthologs.list
-  Resultlist[["human.converted.mice.names"]] <- human.converted
+  Resultlist[["SeuratObject.species2.list"]] <- SeuratObject.mouse.combined.orthologs.list
+  Resultlist[["SeuratObject.species1.list"]] <- SeuratObject.human.combined.orthologs.list
+  Resultlist[["species1.converted.species2.names"]] <- human.converted
   return(Resultlist)
 }
 
@@ -114,20 +114,20 @@ RenameGenesSeurat <- function(ObjList, newnames) { # Replace gene names in diffe
 
 #' Wrapper function for SubsetObject and RenameGenesSeurat as well as the Seurat integration steps
 #' @author Mariano Ruz Jurado
-#' @param SeuratObjectList.mice list with mouse objects to subset by found orthologues
+#' @param SeuratObjectList.species.1 list with objects to subset by found orthologues
 #' @param OrthologueList previously made list with 1 to 1 orthologue assignment
-#' @param SeuratObjectList.human list with human seurat objects to subset by orthologues
+#' @param SeuratObjectList.species.2 list with seurat objects to subset by orthologues
 #' @return Integrated Human/Mouse Seurat object with Human Nomenclature
 #' @export
-IntegrateObjects <- function(SeuratObjectList.human,SeuratObjectList.mice,OrthologueList){
-  SubsetList <- SubsetObjects(SeuratObjectList.human = SeuratObjectList.human,
-                              SeuratObjectList.mice = SeuratObjectList.mice,
+IntegrateObjects <- function(SeuratObjectList.species.1,SeuratObjectList.species.2,OrthologueList){
+  SubsetList <- SubsetObjects(SeuratObjectList.human = SeuratObjectList.1,
+                              SeuratObjectList.mice = SeuratObjectList.2,
                               OrthologueList = OrthologueList)
 
-  HumanizedList.mice <- RenameGenesSeurat(ObjList = SubsetList$SeuratObject.mouse.combined.orthologs.list,
-                                         newnames = SubsetList$human.converted.mice.names)
+  HumanizedList.mice <- RenameGenesSeurat(ObjList = SubsetList$SeuratObject.species2.list,
+                                         newnames = SubsetList$species1.converted.species2.names)
 
-  SeuratObjectList <- do.call("c",list(HumanizedList.mice,SubsetList$SeuratObject.human.combined.orthologs.list))
+  SeuratObjectList <- do.call("c",list(HumanizedList.mice,SubsetList$SeuratObject.species1.list))
   SeuratObject.anchors <- Seurat::FindIntegrationAnchors(object.list = SeuratObjectList, dims = 1:20)
   SeuratObject.combined <- Seurat::IntegrateData(anchorset = SeuratObject.anchors, dims = 1:20)
 

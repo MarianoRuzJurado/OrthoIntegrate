@@ -4,14 +4,18 @@
 \alias{SubsetObjects}
 \title{Subsets objects by orthologues found in the global list and gives Human gene names for Mouse objects}
 \usage{
-SubsetObjects(OrthologueList, SeuratObjectList.mice, SeuratObjectList.human)
+SubsetObjects(
+  OrthologueList,
+  SeuratObjectList.species.1,
+  SeuratObjectList.species.2
+)
 }
 \arguments{
-\item{OrthologueList}{previous mad elist with 1 to 1 ortholgue assignment}
+\item{OrthologueList}{previous mad elist with 1 to 1 orthologue assignment}
 
-\item{SeuratObjectList.mice}{list with mouse objects to subset by found orthologues}
+\item{SeuratObjectList.species.1}{list with objects of species 1 to subset by found orthologues}
 
-\item{SeuratObjectList.human}{list with human seurat objects to subset by orthologues}
+\item{SeuratObjectList.species.2}{list with seurat objects of species 2 to subset by orthologues}
 }
 \value{
 list containing sublists with subsetted objects
