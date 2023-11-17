@@ -7,7 +7,9 @@
 SubsetObjects(
   OrthologueList,
   SeuratObjectList.species.1,
-  SeuratObjectList.species.2
+  SeuratObjectList.species.2,
+  species.1,
+  species.2
 )
 }
 \arguments{
@@ -16,6 +18,10 @@ SubsetObjects(
 \item{SeuratObjectList.species.1}{list with objects of species 1 to subset by found orthologues}
 
 \item{SeuratObjectList.species.2}{list with seurat objects of species 2 to subset by orthologues}
+
+\item{species.1}{name of the species, ("human","mouse", "zebrafish")}
+
+\item{species.2}{name of the species, ("human","mouse", "zebrafish")}
 }
 \value{
 list containing sublists with subsetted objects

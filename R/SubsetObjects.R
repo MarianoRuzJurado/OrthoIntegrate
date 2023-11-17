@@ -3,9 +3,11 @@
 #' @param SeuratObjectList.species.1 list with objects of species 1 to subset by found orthologues
 #' @param OrthologueList previous mad elist with 1 to 1 orthologue assignment
 #' @param SeuratObjectList.species.2 list with seurat objects of species 2 to subset by orthologues
+#' @param species.1 name of the species, ("human","mouse", "zebrafish")
+#' @param species.2 name of the species, ("human","mouse", "zebrafish")
 #' @return list containing sublists with subsetted objects
 #' @export
-SubsetObjects <- function(OrthologueList,SeuratObjectList.species.1,SeuratObjectList.species.2){
+SubsetObjects <- function(OrthologueList,SeuratObjectList.species.1,SeuratObjectList.species.2, species.1, species.2){
   #for loop containing sub setting mice by all found orthologues and converting mice names in human orthologues
   SeuratObject.mouse.combined.orthologs.list <- list()
   human.converted <- list()
@@ -18,7 +20,7 @@ SubsetObjects <- function(OrthologueList,SeuratObjectList.species.1,SeuratObject
     for (j in 1:length(mouseGenes)) {
       mGene <- mouseGenes[j]
       #check if the feature name is in the global ortholog list made of the human/mice gtf and uppercase matching
-      if (mGene %in% OrthologueList$MouseGene == TRUE){
+      if (mGene %in% OrthologueList[[species.2]] == TRUE){
         mouseGenes.overlap[j] <- mGene
       }
     }
@@ -33,7 +35,7 @@ SubsetObjects <- function(OrthologueList,SeuratObjectList.species.1,SeuratObject
     # , now that there are only mice features which have human ortholog
     for (k in 1:length(orthologlist.overlap)) {
       mGene <- orthologlist.overlap[k]
-      human.names[k] <- OrthologueList[OrthologueList$MouseGene == mGene,]$HGNC.symbol
+      human.names[k] <- OrthologueList[OrthologueList[[species.2]] == mGene,][[species.1]]
     }
 
     #insert the converted human.names into a list
@@ -117,12 +119,16 @@ RenameGenesSeurat <- function(ObjList, newnames) { # Replace gene names in diffe
 #' @param SeuratObjectList.species.1 list with objects to subset by found orthologues
 #' @param OrthologueList previously made list with 1 to 1 orthologue assignment
 #' @param SeuratObjectList.species.2 list with seurat objects to subset by orthologues
+#' @param species.1 name of the species, ("human","mouse", "zebrafish")
+#' @param species.2 name of the species, ("human","mouse", "zebrafish")
 #' @return Integrated Human/Mouse Seurat object with Human Nomenclature
 #' @export
-IntegrateObjects <- function(SeuratObjectList.species.1,SeuratObjectList.species.2,OrthologueList){
+IntegrateObjects <- function(SeuratObjectList.species.1,SeuratObjectList.species.2,OrthologueList, species.1, species.2){
   SubsetList <- SubsetObjects(SeuratObjectList.species.1 = SeuratObjectList.species.1,
                               SeuratObjectList.species.2 = SeuratObjectList.species.2,
-                              OrthologueList = OrthologueList)
+                              OrthologueList = OrthologueList,
+                              species.1,
+                              species.2)
 
   HumanizedList.mice <- RenameGenesSeurat(ObjList = SubsetList$SeuratObject.species2.list,
                                          newnames = SubsetList$species1.converted.species2.names)

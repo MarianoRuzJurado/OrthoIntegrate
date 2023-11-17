@@ -7,7 +7,9 @@
 IntegrateObjects(
   SeuratObjectList.species.1,
   SeuratObjectList.species.2,
-  OrthologueList
+  OrthologueList,
+  species.1,
+  species.2
 )
 }
 \arguments{
@@ -16,6 +18,10 @@ IntegrateObjects(
 \item{SeuratObjectList.species.2}{list with seurat objects to subset by orthologues}
 
 \item{OrthologueList}{previously made list with 1 to 1 orthologue assignment}
+
+\item{species.1}{name of the species, ("human","mouse", "zebrafish")}
+
+\item{species.2}{name of the species, ("human","mouse", "zebrafish")}
 }
 \value{
 Integrated Human/Mouse Seurat object with Human Nomenclature
