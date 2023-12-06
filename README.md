@@ -85,7 +85,9 @@ After this step finished, we can subset our seurat objects by the found ortholog
 ```ruby
 SeuratObject.combined <- IntegrateObjects(OrthologueList = Orthologue.DF,
                                           SeuratObjectList.species.1 = resultList.human$SeuratObjects,
-                                          SeuratObjectList.species.2 = resultList.mice$SeuratObjects)
+                                          SeuratObjectList.species.2 = resultList.mice$SeuratObjects,
+                                          species.1 = "human",
+                                          species.2 = "mouse")
 ```
 After succesful integration, we can continue our downstream analysis with an object containing single cell data from different species.
 
