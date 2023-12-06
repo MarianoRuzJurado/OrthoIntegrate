@@ -11,7 +11,8 @@ SubsetObjects <- function(OrthologueList,SeuratObjectList.species.1,SeuratObject
   #for loop containing sub setting mice by all found orthologues and converting mice names in human orthologues
   SeuratObject.mouse.combined.orthologs.list <- list()
   human.converted <- list()
-
+  #Ensure the colnames of OrthologueList are set correctly
+  colnames(OrthologueList) <- c(species.1, species.2)
   for (i in 1:length(SeuratObjectList.species.2)) {
 
     mouseGenes<-rownames(SeuratObjectList.species.2[[i]]@assays$RNA)
@@ -61,7 +62,7 @@ SubsetObjects <- function(OrthologueList,SeuratObjectList.species.1,SeuratObject
     for (j in 1:length(humanGenes)) {
       hGene <- humanGenes[j]
       #check if the feature name is in the global ortholog list made of the human/mice gtf and uppercase matching
-      if (hGene %in% OrthologueList$HGNC.symbol == TRUE){
+      if (hGene %in% OrthologueList[[species.1]] == TRUE){
         humanGenes.overlap[j] <- hGene
       }
     }
