@@ -74,7 +74,7 @@ After our data is converted to seurat objects we may start to build a table cont
 Orthologue.DF <- BuildOrthologues(GTF.1 = ".../Humangenes.gtf",
                                   GTF.2 = ".../Micegenes.gtf",
                                   species.1 = "human",
-                                  species.2 = "mice")
+                                  species.2 = "mouse")
 
 # I strongly recommend to save the Orthologue.DF file for future use.
 ```
