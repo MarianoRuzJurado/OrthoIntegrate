@@ -103,7 +103,7 @@ SubsetList <- SubsetObjects(OrthologueList = Orthologue.DF,
 This returns a list with the subsetted objects for our two species. Maybe you want to check the new nomeneclature on the objects. This can be achieved by using the RenamesGenesSeurat function on ```SubsetList```:
 
 ```ruby
-HumanizedList.mice <- RenameGenesSeurat(ObjList = SubsetList$SeuratObject.species.2.list,
+HumanizedList.mice <- RenameGenesSeurat(ObjList = SubsetList$SeuratObject.species2.list,
                                         newnames = SubsetList$species1.converted.species2.names)
 ```
 
