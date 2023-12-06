@@ -11,7 +11,7 @@ SubsetObjects <- function(OrthologueList,SeuratObjectList.species.1,SeuratObject
   #for loop containing sub setting mice by all found orthologues and converting mice names in human orthologues
   SeuratObject.mouse.combined.orthologs.list <- list()
   human.converted <- list()
-  #Ensure the colnames of OrthologueList are set correctly
+  #Ensure the colnames of OthologueList are set correctly
   colnames(OrthologueList) <- c(species.1, species.2)
   for (i in 1:length(SeuratObjectList.species.2)) {
 
