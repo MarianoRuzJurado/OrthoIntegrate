@@ -11,6 +11,8 @@ devtools::install_github("MarianoRuzJurado/OrthoIntegrate")
 
 # <b> How to use it </b>
 
+<b> Tested with Seuratv4, if there are some problems with Seuratv5 please feel free to open up an issue! </b>
+
 First load in the ```OrthoIntegrate``` package:
 
 ```ruby
