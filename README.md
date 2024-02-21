@@ -1,4 +1,9 @@
 # OrthoIntegrate
+
+
+<a href="https://zenodo.org/doi/10.5281/zenodo.10686730"><img src="https://zenodo.org/badge/559908015.svg" alt="DOI"></a>
+
+
 R package functions for Orthologue Assignment and Integration of Single Cell Data between species
 
 # <b> How to install </b>
