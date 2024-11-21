@@ -87,7 +87,7 @@ Orthologue.DF <- BuildOrthologues(GTF.1 = ".../Humangenes.gtf",
 ```
 
 It will start define orthologues for our genes by using the Ensembl, Uniprot and NCBI database by creating a global useable table.
-After this step finished, we can subset our seurat objects by the found orthologues and integrate them into one object:
+After this step finished, we can subset our seurat objects by the found orthologues and integrate them into one object, <b> update for Seuratv5: </b> Please continue with RenameGenesSeuratv5 function, since IntegrateObjects will not work with new layer structure:
 
 ```ruby
 SeuratObject.combined <- IntegrateObjects(OrthologueList = Orthologue.DF,
@@ -109,13 +109,22 @@ SubsetList <- SubsetObjects(OrthologueList = Orthologue.DF,
                             species.1 = "human",
                             species.2 = "mouse")
 ```
-This returns a list with the subsetted objects for our two species. Maybe you want to check the new nomeneclature on the objects. This can be achieved by using the RenamesGenesSeurat function on ```SubsetList```:
+This returns a list with the subsetted objects for our two species. Maybe you want to check the new nomeneclature on the objects. This can be achieved by using the RenamesGenesSeurat function on ```SubsetList```, <b> update for Seuratv5: </b> Please use RenamesGenesSeuratv5 instead:
 
 ```ruby
 HumanizedList.mice <- RenameGenesSeurat(ObjList = SubsetList$SeuratObject.species2.list,
                                         newnames = SubsetList$species1.converted.species2.names)
+HumanizedList.mice <- RenameGenesSeuratv5(ObjList = SubsetList$SeuratObject.species2.list,
+                                        newnames = SubsetList$species1.converted.species2.names)
 ```
 
+if you used RenamesGenesSeuratv5 then continue with:
+
+```ruby
+SeuratObjectList <- do.call("c",list(HumanizedList.mice, Human_subsetted_list))
+SeuratObject.anchors <- FindIntegrationAnchors(object.list = SeuratObjectList)
+SeuratObject.combined <- IntegrateData(anchorset = SeuratObject.anchors)
+```
 
 # <b> Contribution Guidelines </b>
 Raising up an issue in this Github repository might be the fastest way of submitting suggestions and bugs.
