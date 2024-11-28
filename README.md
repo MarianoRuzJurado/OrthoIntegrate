@@ -124,6 +124,10 @@ if you used ```RenamesGenesSeuratv5``` then continue with:
 SeuratObjectList <- do.call("c",list(HumanizedList.mice, SubsetList$SeuratObject.species1.list))
 SeuratObject.anchors <- FindIntegrationAnchors(object.list = SeuratObjectList)
 SeuratObject.combined <- IntegrateData(anchorset = SeuratObject.anchors)
+
+#You might need to rejoin the layers in the RNA assay before proceeding with further downstream analysis:
+SeuratObject.combined <- JoinLayers(SeuratObject.combined, assay = "RNA")
+
 ```
 
 # <b> Contribution Guidelines </b>
