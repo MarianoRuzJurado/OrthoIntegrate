@@ -121,7 +121,7 @@ HumanizedList.mice <- RenameGenesSeuratv5(ObjList = SubsetList$SeuratObject.spec
 if you used ```RenamesGenesSeuratv5``` then continue with:
 
 ```ruby
-SeuratObjectList <- do.call("c",list(HumanizedList.mice, Human_subsetted_list))
+SeuratObjectList <- do.call("c",list(HumanizedList.mice, SubsetList$SeuratObject.species1.list))
 SeuratObject.anchors <- FindIntegrationAnchors(object.list = SeuratObjectList)
 SeuratObject.combined <- IntegrateData(anchorset = SeuratObject.anchors)
 ```
