@@ -15,7 +15,17 @@ SubsetObjects <- function(OrthologueList,SeuratObjectList.species.1,SeuratObject
   colnames(OrthologueList) <- c(species.1, species.2)
   for (i in 1:length(SeuratObjectList.species.2)) {
 
-    mouseGenes<-rownames(SeuratObjectList.species.2[[i]]@assays$RNA)
+    mouseGenes <- tryCatch(
+      #attempting for Seuv4
+      expr = {
+        rownames(SeuratObjectList.species.2[[i]]@assays$RNA)
+      },
+      #if an error occurs, try the approach for Seuv5
+      error = function(e) {
+        rownames(SeuratObjectList.species.2[[i]]$assays$RNA)
+      }
+    )
+    
     mouseGenes.overlap <- character()
     human.names <- character()
     for (j in 1:length(mouseGenes)) {
@@ -56,7 +66,17 @@ SubsetObjects <- function(OrthologueList,SeuratObjectList.species.1,SeuratObject
   SeuratObject.human.combined.orthologs.list <- list()
   for (i in 1:length(SeuratObjectList.species.1)) {
 
-    humanGenes<-rownames(SeuratObjectList.species.1[[i]]@assays$RNA)
+    humanGenes <- tryCatch(
+      #attempting for Seuv4
+      expr = {
+        rownames(SeuratObjectList.species.1[[i]]@assays$RNA)
+      },
+      #if an error occurs, try the approach for Seuv5
+      error = function(e) {
+        rownames(SeuratObjectList.species.1[[i]]$assays$RNA)
+      }
+    )
+    
     humanGenes.overlap <- character()
     humanGenes.no.ortholog <- character()
     for (j in 1:length(humanGenes)) {
