@@ -146,8 +146,8 @@ RenameGenesSeuratv5 <- function(ObjList, newnames) { # Replace gene names in dif
   for (i in 1:length(ObjList)) {
     obj <- ObjList[[i]]
     convert.names <- newnames[[i]]
-    exp_mtx_counts <- as.matrix(obj@assays$RNA@counts)
-    exp_mtx_data <- as.matrix(obj@assays$RNA@data)
+    exp_mtx_counts <- as.matrix(obj@assays$RNA$counts)
+    exp_mtx_data <- as.matrix(obj@assays$RNA$data)
     #data frame conversion
     con_df <- data.frame(species.1 = rownames(exp_mtx_counts),
                          species.2 = convert.names,
