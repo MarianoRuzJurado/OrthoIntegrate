@@ -130,7 +130,7 @@ BuildOrthologues <- function(GTF.1, GTF.2, species.1, species.2, alignment_type=
 
         }
         # if sequence matching doesnt give a hit because of no sequence entries in entrez(NCBI), make a match based on gene symbol similarity
-        if (is.null(output.prot[[2]]) || is.null(output.prot[[3]]) && is.null(output.nuc[[2]])) {
+        if ((is.null(output.prot[[2]]) || is.null(output.prot[[3]]) ) && is.null(output.nuc[[2]])) {
           counter <- counter+1
           mGene.low <- tolower(mGene) # lowercase HGNC symbol for lower Levenshtein distances
           replacement <- replacement[replacement != ''] # delete empty character strings in vector, there is one feature
