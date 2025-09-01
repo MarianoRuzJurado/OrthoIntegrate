@@ -153,7 +153,8 @@ BuildOrthologues <- function(GTF.1, GTF.2, species.1, species.2, alignment_type=
       #only 1 replacement and not already in orthologue list, ideal match
       if (length(replacement)==1 && !(replacement %in% OrthologueList_allHuman$MouseGene))
       {
-        OrthologueList_allHuman[OrthologueList_allHuman$HGNC.symbol==mGene,]$MouseGene=replacement
+        OrthologueList_allHuman[!is.na(OrthologueList_allHuman$HGNC.symbol) & 
+                                  OrthologueList_allHuman$HGNC.symbol == mGene,]$MouseGene = replacement
       }
     }
   }
@@ -325,7 +326,8 @@ protein.matching <- function (mGene, replacement, OrthologueList_allHuman,specie
         replacement.hit <- names(local.Align.list[j + 1])
         j <- j + 1
       }
-      OrthologueList_allHuman[OrthologueList_allHuman$HGNC.symbol == mGene, ]$MouseGene = replacement.hit # set orthologue
+      OrthologueList_allHuman[!is.na(OrthologueList_allHuman$HGNC.symbol) & 
+                                OrthologueList_allHuman$HGNC.symbol == mGene,]$MouseGene = replacement.hit # set orthologue
     }
   }
   else {
@@ -449,7 +451,8 @@ nucleotide.matching <- function(mGene,replacement,OrthologueList_allHuman,specie
         replacement.hit <- names(local.Align.list[j+1])
         j<-j+1
       }
-      OrthologueList_allHuman[OrthologueList_allHuman$HGNC.symbol==mGene,]$MouseGene=replacement.hit # set orthologue
+      OrthologueList_allHuman[!is.na(OrthologueList_allHuman$HGNC.symbol) & 
+                                OrthologueList_allHuman$HGNC.symbol == mGene,]$MouseGene = replacement.hit # set orthologue
     }
   }
   else
