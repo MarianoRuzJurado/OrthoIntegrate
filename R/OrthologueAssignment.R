@@ -147,7 +147,8 @@ BuildOrthologues <- function(GTF.1, GTF.2, species.1, species.2, alignment_type=
             replacement.hit <- replacement[low.score.hit+j]
             j<-j+1
           }
-          OrthologueList_allHuman[OrthologueList_allHuman$HGNC.symbol==mGene,]$MouseGene=replacement.hit # set ortholog
+          OrthologueList_allHuman[!is.na(OrthologueList_allHuman$HGNC.symbol) & 
+                                    OrthologueList_allHuman$HGNC.symbol == mGene,] = replacement.hit # set ortholog
         }
       }
       #only 1 replacement and not already in orthologue list, ideal match
