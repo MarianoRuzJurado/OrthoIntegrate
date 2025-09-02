@@ -198,22 +198,25 @@ BuildOrthologues <- function(GTF.1, GTF.2, species.1, species.2, alignment_type=
 
   #set the found ortholgues in lower case into the orthologuelist
   for (ortholog.name in MGI.symbols.in.hits) {
-
     if (species.2 == "human") {
-      if (toupper(ortholog.name) %in% OrthologueList_allHuman$MouseGene == FALSE){ # check if already in species.1
-        OrthologueList_allHuman[OrthologueList_allHuman$HGNC.symbol==ortholog.name,]$MouseGene=toupper(ortholog.name)
+      if (toupper(ortholog.name) %in% OrthologueList_allHuman$MouseGene == 
+          FALSE) {
+        OrthologueList_allHuman[!is.na(OrthologueList_allHuman$HGNC.symbol) & OrthologueList_allHuman$HGNC.symbol == 
+                                  ortholog.name, ]$MouseGene = toupper(ortholog.name)
       }
     }
-
     if (species.2 == "mouse") {
-      if (firstup(tolower(ortholog.name)) %in% OrthologueList_allHuman$MouseGene == FALSE){
-        OrthologueList_allHuman[OrthologueList_allHuman$HGNC.symbol==ortholog.name,]$MouseGene=firstup(tolower(ortholog.name))
+      if (firstup(tolower(ortholog.name)) %in% OrthologueList_allHuman$MouseGene == 
+          FALSE) {
+        OrthologueList_allHuman[!is.na(OrthologueList_allHuman$HGNC.symbol) & OrthologueList_allHuman$HGNC.symbol == 
+                                  ortholog.name, ]$MouseGene = firstup(tolower(ortholog.name))
       }
     }
-
     if (species.2 == "zebrafish") {
-      if (tolower(ortholog.name) %in% OrthologueList_allHuman$MouseGene == FALSE){
-        OrthologueList_allHuman[OrthologueList_allHuman$HGNC.symbol==ortholog.name,]$MouseGene=tolower(ortholog.name)
+      if (tolower(ortholog.name) %in% OrthologueList_allHuman$MouseGene == 
+          FALSE) {
+        OrthologueList_allHuman[!is.na(OrthologueList_allHuman$HGNC.symbol) & OrthologueList_allHuman$HGNC.symbol == 
+                                  ortholog.name, ]$MouseGene = tolower(ortholog.name)
       }
     }
   }
